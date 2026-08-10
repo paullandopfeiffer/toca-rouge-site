@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toca Rouge — 17 September, Boris</title>
+<meta name="description" content="Toca Rouge. Afro House &amp; tech house. 17 September, Boris. Get on the list.">
+<style>
+  :root {
+    --bg: #0b0b0c;
+    --fg: #f5f5f5;
+    --accent: #d31027;
+    --muted: #9a9a9a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .wrap {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8vh 6vw;
+  }
+  h1 {
+    font-size: clamp(2.5rem, 10vw, 5rem);
+    letter-spacing: 0.08em;
+    margin: 0 0 0.5rem;
+    color: var(--accent);
+  }
+  .subhead {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: var(--fg);
+    margin: 0 0 0.25rem;
+  }
+  .details {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin: 0 0 2.5rem;
+  }
+  .cta {
+    display: inline-block;
+    padding: 0.9rem 2.2rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    transition: opacity 0.15s ease;
+  }
+  .cta:hover { opacity: 0.85; }
+  footer {
+    margin-top: 3rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>TOCA ROUGE</h1>
+    <p class="subhead">Afro House &amp; tech house.</p>
+    <p class="details">17 September · Boris · Barcelona</p>
+    <a class="cta" href="#" id="signup-link">Get on the list</a>
+    <footer>
+      Balmes Balmes GbR · <a href="#" id="privacy-link">Privacy</a>
+    </footer>
+  </div>
+</body>
+</html>
