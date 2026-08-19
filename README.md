@@ -1,6 +1,6 @@
 # toca-rouge-site
 
-Source for **tocarougeevents.com** — the Toca Rouge audience capture funnel.
+Source for **tocarougebarcelona.com** — the Toca Rouge audience capture funnel.
 Deployed via GitHub Pages from this repo.
 
 | File | Purpose |
@@ -8,7 +8,7 @@ Deployed via GitHub Pages from this repo.
 | `index.html` | Landing page |
 | `signup.html` | Signup form — POSTs directly to the linked Google Sheet via the Form's own `entry.*` fields. Reads `?src=` for attribution. |
 | `privacy.html` | Privacy notice (real page, not a Doc link) |
-| `CNAME` | Maps the custom domain. **Do not delete** — removing it breaks `tocarougeevents.com`. |
+| `CNAME` | Maps the custom domain. **Do not delete** — removing it breaks `tocarougebarcelona.com`. |
 
 ## Identity — v1, shipped as interim (2026-08-15)
 
