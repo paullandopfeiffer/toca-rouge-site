@@ -138,7 +138,7 @@
     <a class="back" href="/">← Back</a>
     <h1>Almost there</h1>
     <p class="subhead">Fill this in and we'll take you straight to your ticket.</p>
-    <form id="signup-form">
+    <form id="signup-form" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLScM_ItIO17QPNIq5TFSShtKXKvBZAc43XQ4Zhh5KTzV0Czc0g/formResponse">
       <div>
         <label for="first-name">First name</label>
         <input type="text" id="first-name" name="entry.1637221435" required>
@@ -163,55 +163,77 @@
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
       <button type="submit" class="submit" id="submit-btn">Get on the list</button>
-      <p class="error" id="error-msg">Something went wrong — please try again, or use the link below.</p>
+      <p class="error" id="error-msg">That's taking longer than expected. Your details may already be saved &mdash; try once more, or use the link below.</p>
     </form>
     <p class="note">
       We'll add you to our WhatsApp Community ourselves using the number you give us —
       no extra step needed.
     </p>
     <p class="note">
-      Not working? <a href="https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG" style="color: var(--accent);">Continue to your ticket →</a>
+      Not working? <a href="https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG" style="color: var(--accent);">Skip and go straight to your ticket →</a>
+      <br><span style="opacity:.65">This skips the free list — only use it if the form above won't submit.</span>
     </p>
   </div>
+  <iframe name="gform-sink" id="gform-sink" title="" aria-hidden="true" tabindex="-1"
+          style="position:absolute;left:-9999px;width:0;height:0;border:0"></iframe>
   <script>
     (function () {
-      // Populate the hidden attribution field from ?src=... in the URL,
-      // matching each ambassador/placement's unique link.
+      // Populate the hidden attribution field from ?src=... in the URL.
       var params = new URLSearchParams(window.location.search);
       var src = params.get('src');
       if (src) document.getElementById('src').value = src;
 
-      var FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScM_ItIO17QPNIq5TFSShtKXKvBZAc43XQ4Zhh5KTzV0Czc0g/formResponse';
       var BORIS_LINK = 'https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG';
 
       var form = document.getElementById('signup-form');
       var btn = document.getElementById('submit-btn');
       var errorMsg = document.getElementById('error-msg');
+      var sink = document.getElementById('gform-sink');
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
+      // Submission is a NATIVE form POST aimed at a hidden iframe, not a
+      // fetch. Three reasons, all learned the hard way on 2026-08-20:
+      //
+      //  1. A no-cors fetch returns an opaque response — status 0, ok false —
+      //     whether Google accepted the submission or threw it away. The page
+      //     could never tell, so a blocked request still redirected the user
+      //     to the ticket page as though they were on the list.
+      //  2. Content blockers and tracking protection kill cross-origin fetch
+      //     far more readily than they block a form POST into an iframe.
+      //  3. The iframe's load event is a REAL signal that Google answered.
+      //
+      // The target is set here rather than in the HTML on purpose: with JS
+      // unavailable the form posts top-level instead, and Google's own
+      // confirmation page — which carries the WhatsApp and ticket links —
+      // is what the visitor sees. Degraded, but the signup is still captured.
+      form.target = 'gform-sink';
+
+      var submitted = false;
+      var timer = null;
+
+      sink.addEventListener('load', function () {
+        if (!submitted) return;      // ignore the iframe's initial about:blank
+        clearTimeout(timer);
+        window.location.href = BORIS_LINK;
+      });
+
+      // No preventDefault: the browser performs the POST itself. This handler
+      // only runs once the browser's own required-field validation passes.
+      form.addEventListener('submit', function () {
+        if (submitted) return;
+        submitted = true;
         errorMsg.classList.remove('show');
         btn.disabled = true;
         btn.textContent = 'Submitting…';
 
-        var data = new URLSearchParams(new FormData(form));
-
-        // Google's form-submission endpoint doesn't send CORS headers, so we
-        // use a no-cors fetch: the browser can't read the response, but the
-        // POST still reaches Google and lands in the linked Sheet. A rejected
-        // promise here means the request itself failed (e.g. offline).
-        fetch(FORM_ACTION, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: data.toString()
-        }).then(function () {
-          window.location.href = BORIS_LINK;
-        }).catch(function () {
+        // If Google has not answered in 12s, give the visitor something to do
+        // rather than a dead button. Their submission may well have landed,
+        // so the copy must not claim it failed.
+        timer = setTimeout(function () {
           btn.disabled = false;
           btn.textContent = 'Get on the list';
           errorMsg.classList.add('show');
-        });
+          submitted = false;
+        }, 12000);
       });
     })();
   </script>
