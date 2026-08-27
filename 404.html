@@ -102,8 +102,9 @@
       // A mangled link that still carries its campaign code should not lose the
       // code on the way back into the funnel.
       var src = (new URLSearchParams(window.location.search).get('src') || '').trim().slice(0, 64);
-      if (src) {
-        document.getElementById('home-link').href = '/?src=' + encodeURIComponent(src);
+      var home = document.getElementById('home-link');
+      if (src && home) {
+        home.href = '/?src=' + encodeURIComponent(src);
       }
     })();
   </script>

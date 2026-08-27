@@ -266,7 +266,11 @@
       // keeping the two in step, so the redirect could silently point somewhere
       // the visible link did not. Reading it from the anchor makes that
       // impossible, and leaves the URL working with JavaScript switched off.
-      var BORIS_LINK = document.getElementById('ticket-fallback').href;
+      // Null-safe on purpose: this runs BEFORE form.target is set below, so a
+      // throw here would abort the whole IIFE and silently turn the submission
+      // into a top-level post with no ticket redirect.
+      var ticketFallback = document.getElementById('ticket-fallback');
+      var BORIS_LINK = ticketFallback ? ticketFallback.href : '';
 
       var form = document.getElementById('signup-form');
       var btn = document.getElementById('submit-btn');
@@ -296,6 +300,10 @@
 
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
+        // If the fallback anchor is missing there is nowhere to send anyone, so
+        // leave the timer running: at 12s the button re-enables and the neutral
+        // message appears, rather than the visitor sitting on a dead button.
+        if (!BORIS_LINK) return;
         clearTimeout(timer);
         window.location.href = BORIS_LINK;
       });
@@ -306,7 +314,7 @@
         // A visitor cannot see or tab to this field, so anything in it is a bot.
         // preventDefault only on this path — the normal path still lets the
         // browser perform the POST itself, which is the whole point of the design.
-        if (honeypot.value !== '') { e.preventDefault(); return; }
+        if (honeypot && honeypot.value !== '') { e.preventDefault(); return; }
         if (submitted) return;
         submitted = true;
         errorMsg.classList.remove('show');
