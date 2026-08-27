@@ -178,6 +178,17 @@
     height: 0;
     overflow: hidden;
   }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
   .error {
     display: none;
     font-size: 0.85rem;
@@ -236,10 +247,12 @@
       <p class="error" id="error-msg" role="alert">That's taking longer than expected. Your details may already be saved &mdash; try once more, or use the link below.</p>
     </form>
     <p class="note">
-      Want the WhatsApp Community too? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk" style="color: var(--accent-text);">Join here →</a>
+      Want the WhatsApp Community too? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk" style="color: var(--accent-text);"
+         target="_blank" rel="noopener noreferrer">Join here →<span class="visually-hidden"> (opens in a new tab)</span></a>
     </p>
     <p class="note">
-      Not working? <a id="ticket-fallback" href="https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG" style="color: var(--accent-text);">Skip and go straight to your ticket →</a>
+      Not working? <a id="ticket-fallback" href="https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG" style="color: var(--accent-text);"
+         rel="noreferrer">Skip and go straight to your ticket →</a>
       <br><span style="opacity:.65">This skips the free list — only use it if the form above won't submit.</span>
     </p>
   </div>
