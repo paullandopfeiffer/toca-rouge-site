@@ -24,4 +24,4 @@ The real identity is the 8-phase Brand Identity Workflow in Paul's vault,
 paused at Phase 2. When it lands, it replaces this.
 
 ## Before driving real traffic here
-- [ ] Swap the temporary Boris ticket link for the real one
+- [x] Swap the temporary Boris ticket link for the real one — **done 2026-08-19**, verified live 2026-08-27 against `ticket_url` on the event note

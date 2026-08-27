@@ -4,14 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Get on the list — Toca Rouge</title>
+<meta name="description" content="Toca Rouge. Afro House &amp; tech house. 12 September, Boris. Get on the list.">
+<link rel="canonical" href="https://tocarougebarcelona.com/signup.html">
+<meta name="theme-color" content="#0b0b0c">
+<!-- Ambassador links point straight at this page (tocarougebarcelona.com/signup.html?src=…),
+     so it is shared in chat as often as the landing page and needs its own card. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Toca Rouge">
+<meta property="og:url" content="https://tocarougebarcelona.com/signup.html">
+<meta property="og:title" content="Get on the list — Toca Rouge">
+<meta property="og:description" content="Toca Rouge. Afro House &amp; tech house. 12 September, Boris. Get on the list.">
+<!-- TODO - link-preview image. Uncomment these four lines once og.jpg
+     (1200x630, under ~300KB) exists at the site root. Until then WhatsApp and
+     Instagram render a title-and-description card, which is still far better
+     than a bare URL. Do NOT point og:image at a file that does not exist.
+<meta property="og:image" content="https://tocarougebarcelona.com/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+-->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0b0c'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23e4002b'/%3E%3C/svg%3E">
 <style>
   :root {
+    /* ---- Toca Rouge identity tokens -------------------------------------
+       This block is intentionally IDENTICAL on index.html, signup.html and
+       privacy.html. The finished Hausmann/Polvo identity is due 2026-08-31;
+       when it lands, this block is the only thing that changes, pasted once
+       per page. Keeping the three in sync is worth one or two unused
+       declarations per file.
+       Current values are the v1 interim identity (brand/identity.md). ------ */
     --bg: #0b0b0c;
     --fg: #f5f5f5;
     --accent: #e4002b;
+    /* #e4002b is 4.06:1 on --bg: fine for large text and for white-on-red
+       buttons (4.85:1), below the 4.5:1 WCAG AA floor for small text. This
+       tint is 6.60:1 and is used ONLY where red type is under ~18px. The
+       brand red itself is never changed. */
+    --accent-text: #ff5c77;
     --muted: #9a9a9a;
     --field: #1a1a1c;
     --border: #2c2c2f;
+    --focus: #ffffff;
+    --radius-pill: 999px;
+    --radius-box: 8px;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-display: 'Bebas Neue', var(--font-body);
   }
   * { box-sizing: border-box; }
   html, body {
@@ -19,7 +56,7 @@
     padding: 0;
     background: var(--bg);
     color: var(--fg);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: var(--font-body);
   }
   .wrap {
     max-width: 480px;
@@ -65,7 +102,7 @@
     padding: 0.8rem 1rem;
     background: var(--field);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius-box);
     color: var(--fg);
     font-size: 1rem;
     font-family: inherit;
@@ -94,14 +131,14 @@
   .dress {
     background: var(--field);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius-box);
     padding: 0.8rem 1rem;
     font-size: 0.85rem;
     color: var(--fg);
     line-height: 1.5;
   }
-  .dress strong { color: var(--accent); }
-  .privacy-note a { color: var(--accent); }
+  .dress strong { color: var(--accent-text); }
+  .privacy-note a { color: var(--accent-text); }
   button.submit {
     display: inline-block;
     padding: 0.9rem 2.2rem;
@@ -111,7 +148,7 @@
     text-decoration: none;
     font-weight: 600;
     letter-spacing: 0.03em;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: 1.05rem;
     font-family: inherit;
     cursor: pointer;
@@ -119,10 +156,27 @@
   }
   button.submit:hover { opacity: 0.85; }
   button.submit:disabled { opacity: 0.5; cursor: default; }
+
+  /* Keyboard focus. Deliberately :focus-visible, not :focus — a mouse click
+     keeps the quiet border treatment below, while keyboard navigation gets a
+     ring that clears WCAG's 3:1 non-text contrast against every surface here. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
   .error {
     display: none;
     font-size: 0.85rem;
-    color: var(--accent);
+    color: var(--accent-text);
   }
   .error.show { display: block; }
   .note {
@@ -141,17 +195,28 @@
     <form id="signup-form" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLScM_ItIO17QPNIq5TFSShtKXKvBZAc43XQ4Zhh5KTzV0Czc0g/formResponse">
       <div>
         <label for="first-name">First name</label>
-        <input type="text" id="first-name" name="entry.1637221435" required>
+        <input type="text" id="first-name" name="entry.1637221435" required
+               autocomplete="given-name" autocapitalize="words" enterkeyhint="next">
       </div>
       <div>
         <label for="email">Email</label>
-        <input type="email" id="email" name="entry.205280153" required>
+        <input type="email" id="email" name="entry.205280153" required
+               autocomplete="email" inputmode="email" spellcheck="false" enterkeyhint="next">
       </div>
       <div>
         <label for="phone">Phone</label>
-        <input type="tel" id="phone" name="entry.1450901064" required>
+        <input type="tel" id="phone" name="entry.1450901064" required
+               autocomplete="tel" inputmode="tel" enterkeyhint="done">
       </div>
       <input type="hidden" id="src" name="entry.1932387565" value="">
+      <!-- Honeypot. Deliberately NOT an entry.* name, so Google Forms discards it
+           even if it is ever submitted. Off-screen and out of the tab order, so a
+           real visitor cannot fill it; a bot that fills every input will, and the
+           submit handler drops that submission before it reaches Google. -->
+      <div class="hp" aria-hidden="true">
+        <label for="company">Company</label>
+        <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+      </div>
       <label class="consent">
         <input type="checkbox" id="consent" name="entry.956517138" value="Yes, keep me posted">
         I'd like to receive news about future Toca Rouge events by email/WhatsApp.
@@ -163,13 +228,13 @@
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
       <button type="submit" class="submit" id="submit-btn">Get on the list</button>
-      <p class="error" id="error-msg">That's taking longer than expected. Your details may already be saved &mdash; try once more, or use the link below.</p>
+      <p class="error" id="error-msg" role="alert">That's taking longer than expected. Your details may already be saved &mdash; try once more, or use the link below.</p>
     </form>
     <p class="note">
-      Want the WhatsApp Community too? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk" style="color: var(--accent);">Join here →</a>
+      Want the WhatsApp Community too? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk" style="color: var(--accent-text);">Join here →</a>
     </p>
     <p class="note">
-      Not working? <a href="https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG" style="color: var(--accent);">Skip and go straight to your ticket →</a>
+      Not working? <a id="ticket-fallback" href="https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG" style="color: var(--accent-text);">Skip and go straight to your ticket →</a>
       <br><span style="opacity:.65">This skips the free list — only use it if the form above won't submit.</span>
     </p>
   </div>
@@ -178,16 +243,36 @@
   <script>
     (function () {
       // Populate the hidden attribution field from ?src=... in the URL.
+      //
+      // Trimmed and length-capped, and nothing else. Codes are matched EXACTLY
+      // against their source of truth, so this deliberately does not lowercase,
+      // rewrite or reject anything: an unrecognised code must still reach the
+      // sheet unaltered, where it can be seen and explained. Trimming only
+      // repairs whitespace picked up when a link is pasted through a chat app,
+      // which cannot be part of a legitimate code.
       var params = new URLSearchParams(window.location.search);
-      var src = params.get('src');
+      var src = (params.get('src') || '').trim().slice(0, 64);
       if (src) document.getElementById('src').value = src;
 
-      var BORIS_LINK = 'https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG';
+      // Carry the code back to the landing page, so someone who taps Back and
+      // returns through the CTA is still attributed to the campaign they came from.
+      if (src) {
+        var back = document.querySelector('a.back');
+        if (back) back.href = '/?src=' + encodeURIComponent(src);
+      }
+
+      // The ticket URL now has ONE home on this page: the visible fallback link
+      // below. It used to be written twice — there and here — with nothing
+      // keeping the two in step, so the redirect could silently point somewhere
+      // the visible link did not. Reading it from the anchor makes that
+      // impossible, and leaves the URL working with JavaScript switched off.
+      var BORIS_LINK = document.getElementById('ticket-fallback').href;
 
       var form = document.getElementById('signup-form');
       var btn = document.getElementById('submit-btn');
       var errorMsg = document.getElementById('error-msg');
       var sink = document.getElementById('gform-sink');
+      var honeypot = document.getElementById('company');
 
       // Submission is a NATIVE form POST aimed at a hidden iframe, not a
       // fetch. Three reasons, all learned the hard way on 2026-08-20:
@@ -217,7 +302,11 @@
 
       // No preventDefault: the browser performs the POST itself. This handler
       // only runs once the browser's own required-field validation passes.
-      form.addEventListener('submit', function () {
+      form.addEventListener('submit', function (e) {
+        // A visitor cannot see or tab to this field, so anything in it is a bot.
+        // preventDefault only on this path — the normal path still lets the
+        // browser perform the POST itself, which is the whole point of the design.
+        if (honeypot.value !== '') { e.preventDefault(); return; }
         if (submitted) return;
         submitted = true;
         errorMsg.classList.remove('show');
