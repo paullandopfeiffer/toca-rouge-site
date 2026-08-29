@@ -338,10 +338,11 @@ body {
      6:00, an accident of that artwork's exact line widths which does not
      survive at web sizes.
 
-     0.88 is the tightest value that keeps the comma clear (0.71 + 0.16 = 0.87,
-     plus a hair). Remove the comma from the copy and 0.72 becomes correct and
-     literally matches the poster -- see BRAND_INTEGRATION_PLAN.md. */
-  line-height: 0.88;
+     The comma was removed from the copy on 2026-08-29 ("SEP 12TH 2026"), which
+     leaves the block with no descenders at all, so the poster's own 0.72 is now
+     both correct and safe. If a comma or any lower-case descender ever returns
+     to this block, raise this to 0.88 or the glyphs will collide. */
+  line-height: 0.72;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--tr-red);
@@ -645,7 +646,7 @@ input:focus-visible,
 
 /* ---- The mark ------------------------------------------------------------ */
 
-.brand-lockup { margin: 0 0 var(--tr-space-4); }
+.brand-lockup { margin: 0 0 var(--tr-space-6); }
 .brand-lockup img {
   display: block;
   width: clamp(240px, 62vw, 400px);
@@ -708,18 +709,30 @@ p { margin: 0 0 var(--tr-space-4); }
   margin-bottom: var(--tr-space-6);
 }
 
-/* Event details, set as the poster sets them. See section 5 for why 0.88. */
+/* Event details, set exactly as the poster sets them.
+
+   0.72 is measured off the artwork: cap heights 163px with baseline steps of
+   162 and 164px, which against Helvetica Neue's measured 0.71em cap height is
+   line-height 0.72 -- solid leading, caps touching.
+
+   This was 0.88 while the copy read "SEP 12TH, 2026": the comma descends 0.16em
+   below the baseline and collided with the caps beneath. The comma was removed
+   2026-08-29, leaving the block with no descenders at all, so the poster's own
+   value is now both correct and safe. If a comma or any lower-case descender
+   returns to this block, put this back to 0.88 or the glyphs will collide. */
 .details {
   font-family: var(--tr-font-display);
   font-weight: var(--tr-weight-bold);
   font-size: clamp(1.75rem, 8vw, 2.75rem);
-  line-height: 0.88;
+  line-height: 0.72;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--tr-red);
-  margin: 0 0 var(--tr-space-4);
+  margin: 0 0 var(--tr-space-3);
 }
 
+/* Venue reads as a caption to the block above it, so it sits close to the date
+   and takes its distance from the CTA below instead. */
 .venue {
   font-family: var(--tr-font-display);
   font-weight: var(--tr-weight-bold);
