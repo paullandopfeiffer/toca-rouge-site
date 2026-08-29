@@ -88,11 +88,26 @@
   --tr-space-8: 4rem;      /* 64px */
 
   /* ---- Typography --------------------------------------------------------
-     --tr-font-display deliberately resolves to the body stack today. It exists
-     as a single seam so that when a display face is licensed and confirmed,
-     one line changes here and nothing else on the site does. */
-  --tr-font-body:    -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+     Helvetica Neue, confirmed by Paul 2026-08-29 as the brand face (Bold on
+     the poster).
+
+     REFERENCED, NOT EMBEDDED. There is no @font-face and no font file is
+     served: the stack names a font already installed on the visitor's device.
+     That needs no licence. Self-hosting Helvetica Neue / Neue Haas Grotesk
+     would need a separate webfont licence from Monotype, which a desktop
+     licence does not include — see BRAND_INTEGRATION_PLAN.md.
+
+     Coverage: Apple devices (macOS, iOS, iPadOS) ship Helvetica Neue and get
+     the real face. Windows falls back to Arial and Android to its system
+     grotesque; both are metrically close enough that the layout does not
+     shift. Arial is listed before the generic so the fallback is a known
+     quantity rather than whatever the browser picks. */
+  --tr-font-body:    "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
   --tr-font-display: var(--tr-font-body);
+
+  /* The poster sets its information lines in Helvetica Neue Bold. 700 is the
+     weight that maps to it; do not use a synthesised heavier weight. */
+  --tr-weight-bold:  700;
 
   --tr-text-xs:   0.75rem;   /* 12px — legal, captions */
   --tr-text-sm:   0.875rem;  /* 14px — labels, notes */
@@ -148,7 +163,7 @@ body {
   position: relative;
   background-color: var(--tr-ink);
   background-image:
-    linear-gradient(to bottom, rgba(11, 11, 12, 0.60), rgba(11, 11, 12, 0.88)),
+    linear-gradient(to bottom, rgba(11, 11, 12, 0.34), rgba(11, 11, 12, 0.72)),
     image-set(url("bg/texture-portrait-1080.webp") type("image/webp"),
               url("bg/texture-portrait-1080.jpg")  type("image/jpeg"));
   background-size: cover;
@@ -159,7 +174,7 @@ body {
 @media (min-width: 768px) {
   .tr-bg {
     background-image:
-      linear-gradient(to bottom, rgba(11, 11, 12, 0.60), rgba(11, 11, 12, 0.88)),
+      linear-gradient(to bottom, rgba(11, 11, 12, 0.34), rgba(11, 11, 12, 0.72)),
       image-set(url("bg/texture-landscape-1920.webp") type("image/webp"),
                 url("bg/texture-landscape-1920.jpg")  type("image/jpeg"));
   }
@@ -259,6 +274,37 @@ body {
   margin: 0 0 var(--tr-space-3);
 }
 .tr-fine { font-size: var(--tr-text-xs); color: var(--tr-muted); line-height: 1.5; }
+
+/* ---- Poster information block ------------------------------------------
+   Sets the event details exactly as the poster does: Helvetica Neue Bold,
+   uppercase, three stacked lines, tight leading.
+
+   Sized so the smallest rendering stays above 18.66px, which is what lets it
+   carry the brand red on the ink ground: #EA2413 is 4.46:1, which meets WCAG AA
+   for large text only. Reducing this font-size drops it below AA. */
+.tr-poster-block {
+  font-family: var(--tr-font-display);
+  font-weight: var(--tr-weight-bold);
+  font-size: clamp(1.25rem, 5.5vw, 2rem);   /* floor is 20px — do not lower */
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--tr-red);
+  margin: 0 0 var(--tr-space-5);
+}
+
+/* The venue, as the poster carries it: directly under the lockup, in the
+   foreground colour rather than the red, so it reads as a caption to the mark
+   and not as another information line. */
+.tr-poster-venue {
+  font-family: var(--tr-font-display);
+  font-weight: var(--tr-weight-bold);
+  font-size: clamp(1rem, 3.6vw, 1.35rem);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--tr-fg);
+  margin: 0 0 var(--tr-space-6);
+}
 
 /* Red type below ~18px uses the accessible tint, never the raw brand red. */
 .tr-accent-text { color: var(--tr-red-text); }

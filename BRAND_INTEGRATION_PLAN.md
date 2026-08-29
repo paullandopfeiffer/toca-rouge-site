@@ -67,7 +67,7 @@ This is a GitHub Pages repo; a 485 MB binary in git history is permanent and uns
 
 1. **No brand guidelines document, and none exists anywhere on Drive.** The signed brief (`Hausmann Brief — Send Version`) promised handoff as *"source files + exports + the usage note."* The exports arrived; **the usage note did not.** So there is no supplied rule for clear space, minimum size, which mark to use at which size, or how the marks may sit on photography. Every such value in `assets/brand.css` is a conservative convention I chose, and each is commented as such. **Ask Polvo for the usage note.**
 
-2. **No font files were delivered.** See section 3.
+2. **No font files were delivered** — but the face is Helvetica Neue, confirmed by Paul 2026-08-29, and it needs no file. See section 3.
 
 3. **The brand red changes.** The live site runs `--accent: #e4002b` (the rejected v1 interim). The delivered red is `#EA2413`. These are visibly different. Switching is the point of the exercise, but it is a fact-change with copies outside this repo — the poster template, the sticker artwork and `identity.md` all carry a red.
 
@@ -85,31 +85,43 @@ This is a GitHub Pages repo; a 485 MB binary in git history is permanent and uns
 
 8. **Artwork ownership and licensing are recorded as unconfirmed.** `Toca Rouge.md` states, of the 2026-08-21 kickoff: *"fee amount and artwork ownership from item 2 above still unconfirmed."* I found nothing later that closes it. Publishing the mark to a public website is a use worth having settled in writing first.
 
-9. No favicon/app-icon set, no social avatar crop, no motion or animation guidance were delivered. The isotype covers the first two and `assets/` now has derivatives.
+9. **Removing "Balmes Balmes GbR" from the page footers is a legal question, not a design one.** Paul asked for it gone 2026-08-29. It can come off `index`, `esade`, `uic`, `404` and `signup` — but **not** out of `privacy.html`, where naming the data controller is required. See section 8a before this ships.
+
+10. No favicon/app-icon set, no social avatar crop, no motion or animation guidance were delivered. The isotype covers the first two and `assets/` now has derivatives.
 
 ---
 
 ## 3. Fonts and licensing
 
-**No font files were delivered. Zero.** Not in the package, not elsewhere on Drive.
+**Resolved 2026-08-29 by Paul: the face is Helvetica Neue, Bold on the poster.** This supersedes the "no font delivered" gap — Polvo shipped no font file, but the face was known and is now confirmed.
 
-**The good news: the brand name does not need one.** All three SVGs are **fully outlined vector paths** — verified, they contain no `<text>` element, no `font-family`, no `@font-face`. The lockup is artwork. It renders identically everywhere regardless of what fonts a visitor has, and it carries **no font licensing exposure at all.**
+### How it is served: referenced, not embedded
 
-**Can each font be served locally?**
+`assets/brand.css` contains **no `@font-face` and serves no font file.** The stack simply names a font already installed on the visitor's device:
 
-| Face | Serve locally? | Licence |
+```css
+--tr-font-body: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+```
+
+That needs **no licence at all**, because nothing is distributed. It is the difference that matters here: naming an installed font is free, serving the font file is a licensed act.
+
+### Coverage, measured
+
+| Platform | Renders as | Note |
 |---|---|---|
-| The wordmark/logo lettering | **Not applicable** — outlined paths, no font involved | No font licence needed. Artwork ownership is open — see issue 8 |
-| The flyer's supporting type (the bold condensed caps in "MARCEL BS · GRAZZIA", "SEP 12TH, 2026") | **No — the file was not delivered** | **Unknown and unresolvable from what was supplied.** I cannot identify it reliably from a rasterised flyer, and guessing would be a licensing risk, not a design choice |
-| Bebas Neue (currently live) | Yes — SIL OFL 1.1, self-hosting permitted | Safe, but it is the *rejected v1* face and its uppercase condensed look actively fights the new rounded mixed-case identity |
+| macOS, iOS, iPadOS | **Real Helvetica Neue** | Ships with the OS. Verified present on this machine and confirmed to resolve to a distinct face, not a fallback |
+| Windows | Arial | Measured: Arial is **240.14px** against Helvetica Neue's **239.55px** for "SEP 12TH, 2026" at 32px bold — a 0.25% difference. The layout does not shift |
+| Android | System grotesque (Roboto) | Slightly different colour on the page, same metrics class |
 
-**Recommendation.** Ship with the system font stack for all running text. It costs nothing, loads instantly, needs no licence, and it does not pretend to be the brand face. `--tr-font-display` exists in `brand.css` as a single seam: when Polvo confirms the display face **and its licence covers web embedding**, one line changes and the whole site follows.
+So Apple users — a large share of the audience — see the true brand face, and nobody else sees anything broken.
 
-**Do not** self-host a font matched by eye to the flyer. Web embedding is a separately licensed right for most commercial faces, and getting it wrong on a public site is the expensive kind of mistake.
+### Do not self-host it
 
-**`assets/brand.css` therefore contains no `@font-face` rule.** That is deliberate: none would be valid, and a rule pointing at a file that does not exist fails silently — the same trap the repo already documents around the commented-out `og:image`.
+There are 22 `NHaasGroteskDSPro/TXPro` TTFs in `~/Downloads/00_To_Sort/TTF/` (Neue Haas Grotesk, Helvetica Neue's original name) and a `NeueHaasDisplayMedium.ttf` in the BLAU deliverables. **None of these should be put into `assets/` and served.**
 
----
+A desktop font licence covers rendering on your own machine. **Web embedding is a separately licensed right**, priced separately by Monotype, and serving the file from `tocarougebarcelona.com` is distribution. Getting this wrong on a public site is the expensive kind of mistake, and the font stack above already gets the real face onto every Apple device without it.
+
+If you want true Helvetica Neue on Windows and Android too, that is a webfont licence purchase, not a technical change. Worth pricing only if it matters; the fallback is genuinely close.
 
 ## 4. Design system
 
@@ -258,6 +270,26 @@ Restyle by **adding** classes and the stylesheet link, not by rewriting markup. 
 2. **Ask Polvo for the usage note** (clear space, minimum sizes, mark selection) and **the display typeface plus written confirmation its licence covers web embedding.**
 3. **Close the artwork-ownership question** from the 2026-08-21 kickoff before this goes public.
 4. Decide whether `assets/og.jpg` gets wired in at the same time — it is built, correct and unused.
+
+---
+
+## 8a. The "Balmes Balmes GbR" footer — decide before this ships
+
+Paul asked (2026-08-29) for the company name off the site. Design-wise it goes in one line. Legally it splits in two, and the halves are not the same question.
+
+**Safe to remove.** The footer credit on `index.html`, `esade.html`, `uic.html`, `404.html` and `signup.html` is a courtesy credit. Nothing depends on it. The preview already drops it, leaving only the Privacy link.
+
+**Not safe to remove.** `privacy.html` names *"Balmes Balmes - Maximilian Kammermeier & Paul Pfeiffer GbR (Berlin)"* as the data controller. Under GDPR Art. 13 the controller's identity has to be disclosed to the person whose data you are collecting — that page is where the funnel does it, and the signup form links to it as the basis on which people submit their details. Taking the name out of that page would leave the form collecting names, emails and phone numbers with no identified controller.
+
+**The part worth a second's thought.** Balmes Balmes is a German GbR, and German law (DDG, formerly TMG §5) requires a commercial site to carry provider identification — an Impressum — reachable from every page. The site does not have an Impressum page today; the footer credit was the only place the company name appeared outside the privacy notice. So removing it does not create a new gap so much as make an existing one visible.
+
+**Three ways to go, pick one:**
+
+1. **Remove the footer credit, keep `privacy.html` as it is.** Cleanest look. The legal minimum for GDPR stays intact, the German Impressum question stays open exactly as open as it is today. This is what the preview shows.
+2. **Remove the credit, and add "Legal" beside "Privacy"** pointing at a small Impressum page. Costs one page and one link; closes the question properly.
+3. **Keep the credit.** No change, no risk, slightly busier footer.
+
+I have built option 1 into the preview because it is what you asked for and it is reversible. I am not a lawyer and this is not legal advice — but option 2 is the one I would pick, since it gets you the clean footer you want *and* closes a gap that already exists.
 
 ---
 
