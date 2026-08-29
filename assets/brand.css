@@ -1,0 +1,489 @@
+/* =============================================================================
+   Toca Rouge — brand.css
+   Design tokens and reusable base styling for the Polvo identity (v01,
+   delivered 2026-08-29).
+
+   STATUS: NOT LINKED INTO ANY LIVE PAGE. This file is staged on the
+   `brand-integration` branch for review. The live pages still carry their own
+   inline :root token block and are untouched.
+
+   Every contrast ratio quoted below was computed against the WCAG 2.1 relative
+   luminance formula, not estimated. Where a value is marginal it says so.
+
+   Source of truth for the raw colours: the delivered logo PNGs, sampled
+   directly (logo-red-1 = #EA2413, red-2 = #7C1314, red-3 = #4B1200).
+   ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+   1. TYPEFACES
+
+   No font files were delivered with the Polvo v01 package. There is therefore
+   NO valid @font-face rule to write, and none is written here: pointing
+   @font-face at a file that does not exist produces an invisible failed request
+   and a silent fallback, which is the same class of mistake the site already
+   guards against with its commented-out og:image block.
+
+   The wordmark, logo and isotype are delivered as OUTLINED VECTOR PATHS — the
+   SVGs contain no <text> element and no font-family reference. So the brand
+   name itself never needs a font: it is drawn as artwork (see .tr-logo below)
+   and is always correct.
+
+   That leaves running text and headings, which currently use the system stack.
+   Confirm the intended display face with Polvo before adding one here — see
+   BRAND_INTEGRATION_PLAN.md, "Fonts and licensing".
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* ---- Brand colours — exact, never altered -------------------------------
+     These three are the delivered palette. Do not tint, darken or "fix" them;
+     where contrast needs help, the derived tokens below do the work instead. */
+  --tr-red:         #EA2413;   /* primary brand red  (red-1) */
+  --tr-red-deep:    #7C1314;   /* deep oxblood       (red-2) */
+  --tr-red-dark:    #4B1200;   /* darkest red-brown  (red-3) */
+
+  /* ---- Surfaces ---------------------------------------------------------- */
+  --tr-ink:         #0b0b0c;   /* page ground. Carried over from the live site */
+  --tr-panel:       #17100f;   /* raised surface, warmed toward the oxblood */
+  --tr-field:       #1c1312;   /* form input ground */
+
+  /* ---- Foreground -------------------------------------------------------- */
+  --tr-fg:          #f5f5f5;   /* 18.05:1 on --tr-ink */
+  --tr-muted:       #a89e9e;   /*  7.54:1 on --tr-ink, 6.99:1 on --tr-field */
+
+  /* ---- Derived, for accessibility ----------------------------------------
+     --tr-red is 4.46:1 on --tr-ink: it clears the 3:1 large-text floor but
+     misses the 4.5:1 floor for small text. --tr-red-text is a lighter tint of
+     the same hue at 6.39:1, and is used ONLY for red type below ~18px. The
+     brand red itself is never changed to accommodate this. */
+  --tr-red-text:    #F2665A;
+
+  /* White on --tr-red is 4.41:1. That clears AA for LARGE text only
+     (>=18.66px bold / >=24px regular), so any control filled with the brand red
+     must set its label at or above that size. .tr-btn below does exactly that
+     and documents it inline. */
+  --tr-on-red:      #ffffff;
+
+  /* ---- Lines ------------------------------------------------------------- */
+  --tr-border:        #2e2020;  /* 1.15:1 — decorative edge on a filled surface
+                                   only, never the sole indicator of a control */
+  --tr-border-strong: #7d6a6a;  /* 3.88:1 — for a boundary that IS the only
+                                   thing identifying a control */
+  --tr-focus:         #ffffff;  /* keyboard ring; clears 3:1 on every surface here */
+
+  /* ---- Radii ------------------------------------------------------------- */
+  --tr-radius-pill: 999px;
+  --tr-radius-box:  10px;
+  --tr-radius-sm:   6px;
+
+  /* ---- Spacing scale -----------------------------------------------------
+     4px base. Use these rather than ad-hoc rem values so vertical rhythm holds
+     across the five pages. */
+  --tr-space-1: 0.25rem;   /*  4px */
+  --tr-space-2: 0.5rem;    /*  8px */
+  --tr-space-3: 0.75rem;   /* 12px */
+  --tr-space-4: 1rem;      /* 16px */
+  --tr-space-5: 1.5rem;    /* 24px */
+  --tr-space-6: 2rem;      /* 32px */
+  --tr-space-7: 3rem;      /* 48px */
+  --tr-space-8: 4rem;      /* 64px */
+
+  /* ---- Typography --------------------------------------------------------
+     --tr-font-display deliberately resolves to the body stack today. It exists
+     as a single seam so that when a display face is licensed and confirmed,
+     one line changes here and nothing else on the site does. */
+  --tr-font-body:    -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --tr-font-display: var(--tr-font-body);
+
+  --tr-text-xs:   0.75rem;   /* 12px — legal, captions */
+  --tr-text-sm:   0.875rem;  /* 14px — labels, notes */
+  --tr-text-base: 1rem;      /* 16px — body, form inputs (16px avoids iOS zoom) */
+  --tr-text-lg:   1.125rem;  /* 18px — lead paragraph */
+  --tr-text-xl:   1.25rem;   /* 20px — button labels; also the large-text floor */
+
+  --tr-leading-tight: 1.15;
+  --tr-leading-body:  1.55;
+
+  /* ---- Motion ------------------------------------------------------------ */
+  --tr-transition: 0.15s ease;
+}
+
+/* -----------------------------------------------------------------------------
+   2. BASE
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  /* Never suppress this globally — it is the only thing keeping an in-page
+     anchor from teleporting. Honoured only when the visitor allows motion. */
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--tr-ink);
+  color: var(--tr-fg);
+  font-family: var(--tr-font-body);
+  font-size: var(--tr-text-base);
+  line-height: var(--tr-leading-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* -----------------------------------------------------------------------------
+   3. BACKGROUNDS
+
+   The delivered flyer background is not an abstract texture: it is heavily
+   blurred lettering. It reads as atmosphere at low contrast and as noise at
+   high, so it always sits UNDER a scrim, never directly behind body copy.
+
+   .tr-bg paints the scrim and the image together, so no page can accidentally
+   use the raw image behind text.
+   -------------------------------------------------------------------------- */
+
+.tr-bg {
+  position: relative;
+  background-color: var(--tr-ink);
+  background-image:
+    linear-gradient(to bottom, rgba(11, 11, 12, 0.60), rgba(11, 11, 12, 0.88)),
+    image-set(url("bg/texture-portrait-1080.webp") type("image/webp"),
+              url("bg/texture-portrait-1080.jpg")  type("image/jpeg"));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  .tr-bg {
+    background-image:
+      linear-gradient(to bottom, rgba(11, 11, 12, 0.60), rgba(11, 11, 12, 0.88)),
+      image-set(url("bg/texture-landscape-1920.webp") type("image/webp"),
+                url("bg/texture-landscape-1920.jpg")  type("image/jpeg"));
+  }
+}
+
+/* A flat alternative for pages where the texture is the wrong register —
+   the privacy notice, for one. Same ground, no imagery, no extra request. */
+.tr-bg-flat { background-color: var(--tr-ink); }
+
+/* Radial red bloom. Pure CSS, no image request, echoes the flyer's glow. */
+.tr-bloom::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 45% at 50% 38%,
+              rgba(234, 36, 19, 0.26), rgba(234, 36, 19, 0) 72%);
+}
+
+/* -----------------------------------------------------------------------------
+   4. THE MARK
+
+   Two flavours of each mark ship, and picking the wrong one fails silently:
+
+     tocarouge-logo.svg              fill="currentColor" — for INLINING into the
+                                     HTML, where CSS `color` drives it.
+     tocarouge-logo-{red,white,black}.svg
+                                     fill baked in — for <img src>.
+
+   An SVG referenced by <img src> is an isolated document: `currentColor` there
+   resolves against the SVG's OWN colour, which defaults to black, not against
+   the host page. Using the currentColor file in an <img> on this dark ground
+   therefore renders a black mark on a near-black background — invisible, with
+   no error anywhere. Use the pre-coloured files in <img>, the currentColor one
+   only when the markup is inlined.
+
+   Width-only sizing with height:auto — the aspect ratio is fixed by the viewBox
+   and must never be overridden.
+   -------------------------------------------------------------------------- */
+
+.tr-logo,
+.tr-wordmark,
+.tr-isotype {
+  display: block;
+  height: auto;          /* never set both dimensions: it would distort the mark */
+  color: var(--tr-fg);
+  max-width: 100%;
+}
+
+.tr-logo     { width: clamp(210px, 54vw, 380px); }  /* stacked lockup */
+.tr-wordmark { width: clamp(180px, 46vw, 340px); }  /* single line */
+.tr-isotype  { width: clamp(36px, 8vw, 56px); }     /* TR monogram */
+
+/* These modifiers only do anything for an INLINED <svg>. For an <img>, swap the
+   src to the matching pre-coloured file instead — see the note above. */
+.tr-logo--red,
+.tr-wordmark--red,
+.tr-isotype--red { color: var(--tr-red); }
+
+.tr-logo--white,
+.tr-wordmark--white,
+.tr-isotype--white { color: #ffffff; }
+
+/* Clear space. Polvo supplied no guideline for this, so the value here is a
+   conservative convention (half the mark's cap height), NOT a brand rule.
+   Flagged as an open question in BRAND_INTEGRATION_PLAN.md. */
+.tr-logo-lockup { padding: calc(var(--tr-space-4) * 1.25); }
+
+/* -----------------------------------------------------------------------------
+   5. TYPE
+   -------------------------------------------------------------------------- */
+
+.tr-h1 {
+  font-family: var(--tr-font-display);
+  font-size: clamp(2rem, 7vw, 3.25rem);
+  line-height: var(--tr-leading-tight);
+  letter-spacing: -0.01em;
+  font-weight: 700;
+  margin: 0 0 var(--tr-space-3);
+}
+
+.tr-h2 {
+  font-family: var(--tr-font-display);
+  font-size: clamp(1.35rem, 4.5vw, 1.9rem);
+  line-height: var(--tr-leading-tight);
+  font-weight: 700;
+  margin: 0 0 var(--tr-space-3);
+}
+
+.tr-lead   { font-size: var(--tr-text-lg); color: var(--tr-fg); margin: 0 0 var(--tr-space-3); }
+.tr-meta   { font-size: var(--tr-text-sm); color: var(--tr-muted); margin: 0 0 var(--tr-space-5); }
+.tr-eyebrow {
+  font-size: var(--tr-text-sm);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tr-muted);
+  margin: 0 0 var(--tr-space-3);
+}
+.tr-fine { font-size: var(--tr-text-xs); color: var(--tr-muted); line-height: 1.5; }
+
+/* Red type below ~18px uses the accessible tint, never the raw brand red. */
+.tr-accent-text { color: var(--tr-red-text); }
+
+a { color: var(--tr-red-text); }
+a:hover { color: var(--tr-fg); }
+
+/* -----------------------------------------------------------------------------
+   6. BUTTONS
+
+   The filled button's label is set at --tr-text-xl (20px) / 700. That is
+   deliberate and load-bearing: white on --tr-red is 4.41:1, which meets WCAG AA
+   only at the large-text threshold (>=18.66px bold). Reducing this font-size
+   without changing the fill colour would drop the control below AA.
+   -------------------------------------------------------------------------- */
+
+.tr-btn {
+  display: inline-block;
+  padding: var(--tr-space-3) var(--tr-space-6);
+  border: 1px solid transparent;
+  border-radius: var(--tr-radius-pill);
+  font-family: inherit;
+  font-size: var(--tr-text-xl);   /* 20px — see note above. Do not lower. */
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--tr-transition), background-color var(--tr-transition);
+}
+
+.tr-btn--primary {
+  background-color: var(--tr-red);
+  color: var(--tr-on-red);
+}
+.tr-btn--primary:hover { opacity: 0.88; color: var(--tr-on-red); }
+
+/* Outline variant. --tr-border-strong (3.88:1) is used because the border is
+   the only thing identifying this control against the page. */
+.tr-btn--secondary {
+  background-color: transparent;
+  color: var(--tr-fg);
+  border-color: var(--tr-border-strong);
+}
+.tr-btn--secondary:hover { background-color: var(--tr-panel); color: var(--tr-fg); }
+
+.tr-btn:disabled { opacity: 0.5; cursor: default; }
+.tr-btn--block { display: block; width: 100%; }
+
+/* -----------------------------------------------------------------------------
+   7. FORMS
+
+   Input font-size is 16px on purpose: iOS Safari zooms the viewport on focus
+   for anything smaller, which on the signup page would look like a bug.
+   -------------------------------------------------------------------------- */
+
+.tr-label {
+  display: block;
+  font-size: var(--tr-text-sm);
+  color: var(--tr-muted);
+  margin-bottom: var(--tr-space-2);
+}
+
+.tr-input {
+  width: 100%;
+  padding: var(--tr-space-3) var(--tr-space-4);
+  background-color: var(--tr-field);
+  border: 1px solid var(--tr-border-strong);
+  border-radius: var(--tr-radius-box);
+  color: var(--tr-fg);
+  font-family: inherit;
+  font-size: var(--tr-text-base);   /* 16px — do not lower, see note above */
+  line-height: 1.4;
+}
+
+.tr-input::placeholder { color: var(--tr-muted); opacity: 1; }
+
+.tr-input:focus {
+  outline: none;
+  border-color: var(--tr-red);
+  box-shadow: 0 0 0 2px rgba(234, 36, 19, 0.35);
+}
+
+.tr-field-group { display: flex; flex-direction: column; gap: var(--tr-space-2); }
+.tr-form        { display: flex; flex-direction: column; gap: var(--tr-space-5); text-align: left; }
+
+.tr-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tr-space-3);
+  font-size: var(--tr-text-sm);
+  color: var(--tr-muted);
+  line-height: 1.45;
+}
+.tr-consent input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--tr-red);
+}
+
+.tr-panel {
+  background-color: var(--tr-panel);
+  border: 1px solid var(--tr-border);
+  border-radius: var(--tr-radius-box);
+  padding: var(--tr-space-4);
+  font-size: var(--tr-text-sm);
+  line-height: 1.5;
+}
+.tr-panel strong { color: var(--tr-red-text); }
+
+.tr-error { font-size: var(--tr-text-sm); color: var(--tr-red-text); }
+
+/* -----------------------------------------------------------------------------
+   8. IMAGE TREATMENT
+
+   House rule for any photography added later: desaturate slightly, push toward
+   the red end, and always place type on a scrim rather than on the image.
+   -------------------------------------------------------------------------- */
+
+.tr-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--tr-radius-box);
+}
+
+.tr-img--duotone {
+  filter: saturate(0.75) contrast(1.06);
+  mix-blend-mode: luminosity;
+  background-color: var(--tr-red-deep);
+}
+
+.tr-img--scrim { position: relative; }
+.tr-img--scrim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(11, 11, 12, 0.85), rgba(11, 11, 12, 0) 60%);
+  border-radius: inherit;
+}
+
+/* -----------------------------------------------------------------------------
+   9. LAYOUT HELPERS
+   -------------------------------------------------------------------------- */
+
+.tr-wrap {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--tr-space-7) var(--tr-space-5);
+}
+.tr-wrap--wide   { max-width: 680px; }
+.tr-wrap--centre { text-align: center; }
+
+.tr-stack   { display: flex; flex-direction: column; gap: var(--tr-space-4); }
+.tr-stack-6 { display: flex; flex-direction: column; gap: var(--tr-space-6); }
+
+.tr-screen {
+  min-height: 100svh;   /* svh, not vh: avoids the mobile URL-bar jump */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.tr-footer {
+  margin-top: var(--tr-space-7);
+  font-size: var(--tr-text-xs);
+  color: var(--tr-muted);
+}
+.tr-footer a { color: var(--tr-muted); text-decoration: underline; }
+.tr-footer a:hover { color: var(--tr-fg); }
+
+/* -----------------------------------------------------------------------------
+   10. ACCESSIBILITY UTILITIES
+   -------------------------------------------------------------------------- */
+
+/* :focus-visible, not :focus — a mouse click keeps the quiet treatment, while
+   keyboard navigation gets a ring clearing 3:1 against every surface here. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--tr-focus);
+  outline-offset: 2px;
+  border-radius: var(--tr-radius-sm);
+}
+
+.tr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Honeypot helper. Kept identical in behaviour to the live signup page: off
+   screen, zero size, out of the tab order. */
+.tr-hp {
+  position: absolute;
+  left: -9999px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Forced-colors (Windows high contrast): let the OS palette win, but keep the
+   filled button readable as a button. */
+@media (forced-colors: active) {
+  .tr-btn--primary { forced-color-adjust: none; }
+}
