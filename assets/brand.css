@@ -843,6 +843,8 @@ footer a:hover { color: var(--tr-fg); }
   margin-bottom: var(--tr-space-2);
 }
 
+#signup-form .optional { opacity: 0.75; }
+
 #signup-form input[type="text"],
 #signup-form input[type="email"],
 #signup-form input[type="tel"] {
