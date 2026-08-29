@@ -160,6 +160,16 @@ System stack throughout (see section 3). Scale: 12 / 14 / 16 / 18 / 20 px as `--
 
 ### Backgrounds
 
+**The scrim opacity is solved, not chosen.** Brand red on the brightest patch of the raw texture is about 1.6:1; red type needs 3:1 to clear AA at large sizes. Measured against the actually-composited page, at the position each element occupies:
+
+| Element | Ground behind it | Contrast | Floor | |
+|---|---|---|---|---|
+| Logo (red mark) | `#541310` | 3.22:1 | 3.0 | PASS |
+| Venue caption (white) | `#5C1511` | 12.27:1 | 4.5 | PASS |
+| Date block (red, 30px+ bold) | `#591410` | 3.11:1 | 3.0 | PASS |
+
+An earlier, lighter scrim (0.34/0.72) measured **2.90:1** behind the date block — a real fail, found only by sampling the rendered pixels. The gradient is now 0.52 → 0.82. **Lightening it again without re-measuring silently breaks every red element on the page.** The margins here are genuine but slim; red-on-red is inherently near the limit.
+
 `.tr-bg` paints the scrim **and** the image in one rule, so no page can accidentally put copy on the raw artwork. WebP with JPEG fallback via `image-set()`, portrait under 768px and landscape above. `.tr-bloom` adds a pure-CSS radial red glow echoing the flyer — no extra request. `.tr-bg-flat` is the imageless variant for pages where the texture is the wrong register.
 
 ### The mark
@@ -170,6 +180,10 @@ Two flavours per mark, and picking wrong fails **silently**:
 - `tocarouge-{mark}-{red,white,black}.svg` — fill baked in, for **`<img src>`**
 
 An SVG in an `<img>` is an isolated document: `currentColor` resolves against the SVG's own colour, which defaults to black. On this near-black ground that is an invisible logo and no error anywhere. I hit exactly this while building the preview.
+
+**One correction worth recording.** `.tr-logo-lockup` originally set clear space as `padding`. With the global `box-sizing: border-box`, that padding came out of the declared width: a 210px logo rendered as a 170px mark inside a 210px box — 19% smaller than specified, with 40px of invisible height beneath it. Every spacing value around it was then measured against a mark that was not the size it claimed to be, which is what made the composition look unbalanced. Clear space is now `margin`. The delivered artwork fills its viewBox exactly (verified: ink bounds equal canvas on all three marks), so all clear space must come from outside the box.
+
+Vertical rhythm on `index` is **16 / 32 / 32 / 48** — the mark and its venue caption group as one identity unit, then equal gaps separate the event details and the CTA, then the footer sits furthest away. Type hierarchy is logo (240px wide) > date block (30px) > button (20px) > venue caption (14px) > footer (12px).
 
 Sizing is width-only with `height: auto` — the viewBox fixes the ratio and it must never be overridden.
 
@@ -283,13 +297,24 @@ Paul asked (2026-08-29) for the company name off the site. Design-wise it goes i
 
 **The part worth a second's thought.** Balmes Balmes is a German GbR, and German law (DDG, formerly TMG §5) requires a commercial site to carry provider identification — an Impressum — reachable from every page. The site does not have an Impressum page today; the footer credit was the only place the company name appeared outside the privacy notice. So removing it does not create a new gap so much as make an existing one visible.
 
-**Three ways to go, pick one:**
+**Decided 2026-08-29 by Paul: option 2.** The footer credit comes off every page and is replaced by `Privacy · Legal`, with `Legal` pointing at a new Impressum page. `privacy.html` keeps the controller name, untouched.
 
-1. **Remove the footer credit, keep `privacy.html` as it is.** Cleanest look. The legal minimum for GDPR stays intact, the German Impressum question stays open exactly as open as it is today. This is what the preview shows.
-2. **Remove the credit, and add "Legal" beside "Privacy"** pointing at a small Impressum page. Costs one page and one link; closes the question properly.
-3. **Keep the credit.** No change, no risk, slightly busier footer.
+### What the Impressum page still needs from Paul
 
-I have built option 1 into the preview because it is what you asked for and it is reversible. I am not a lawyer and this is not legal advice — but option 2 is the one I would pick, since it gets you the clean footer you want *and* closes a gap that already exists.
+I cannot build it yet. German DDG §5 requires specific fields, and **the vault does not contain the registered address** — I searched `Business/` and it is not recorded anywhere. Needed:
+
+| Field | Status |
+|---|---|
+| Legal name | **Have it** — Balmes Balmes - Maximilian Kammermeier & Paul Pfeiffer GbR |
+| Authorised representatives | **Have it** — Maximilian Kammermeier, Paul Pfeiffer |
+| Registered postal address | **MISSING** — required, no substitute. A c/o or business address is fine; a PO box is not |
+| Email | **Have it** — info@balmesbalmes.com |
+| Phone | Optional if email is responsive |
+| VAT ID (USt-IdNr.) | **Unknown** — `Balmes Balmes/CLAUDE.md` mentions reverse-charge B2B invoicing, which implies one exists. Required *only if* the GbR has one |
+
+I have deliberately **not** created `impressum.html` with placeholder text. A page with a fake address is worse than no page: it would look done, and it would be wrong on a legal notice. Give me the address and it is a ten-minute build.
+
+Until then the preview's `Legal` link is an inert `#`.
 
 ---
 
