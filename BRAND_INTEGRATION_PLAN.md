@@ -187,6 +187,16 @@ Vertical rhythm on `index` is **16 / 32 / 32 / 48** — the mark and its venue c
 
 Sizing is width-only with `height: auto` — the viewBox fixes the ratio and it must never be overridden.
 
+### The poster information block
+
+Set to match the poster, measured off the artwork rather than eyeballed: cap heights 163px, baseline steps 162 and 164px, which against Helvetica Neue's measured 0.71em cap height is **line-height 0.72** — solid leading, caps touching.
+
+**The site uses 0.88, and the difference is the comma.** Measured in-browser, Helvetica Neue's comma descends 0.16em below the baseline, so "SEP 12TH, 2026" spans 0.87em of ink. Anything tighter drops the comma onto the caps of "TILL 6:00" beneath it. The poster escapes this only because its comma happens to fall in the word-space between TILL and 6:00 — an accident of that artwork's exact line widths, and it does not survive at web font sizes. Rendered at 0.72 the two lines visibly collide.
+
+0.88 is the tightest value that clears it. **If you would rather have the poster's literal spacing, drop the comma** — "SEP 12TH 2026" has no descenders at all, and 0.72 then becomes correct and matches the artwork exactly.
+
+The button is uppercase with 0.06em tracking, matching the poster's register; caps need the extra tracking or they read cramped at the same size.
+
 ### Buttons, forms, images
 
 `.tr-btn` with `--primary` (red fill) and `--secondary` (outline, `--tr-border-strong` because the border is the only thing identifying it). `.tr-input` / `.tr-label` / `.tr-consent` / `.tr-panel` mirror the signup page's existing structure so the markup maps one-to-one. `.tr-img--duotone` and `.tr-img--scrim` set the house treatment for any photography added later: type sits on a scrim, never on the image. Focus is `:focus-visible` with a white 2px ring, matching what the site already does.
@@ -299,22 +309,20 @@ Paul asked (2026-08-29) for the company name off the site. Design-wise it goes i
 
 **Decided 2026-08-29 by Paul: option 2.** The footer credit comes off every page and is replaced by `Privacy · Legal`, with `Legal` pointing at a new Impressum page. `privacy.html` keeps the controller name, untouched.
 
-### What the Impressum page still needs from Paul
+### Impressum — built 2026-08-29
 
-I cannot build it yet. German DDG §5 requires specific fields, and **the vault does not contain the registered address** — I searched `Business/` and it is not recorded anywhere. Needed:
+`impressum.html` now exists, carrying the DDG § 5 fields:
 
-| Field | Status |
+| Field | Value |
 |---|---|
-| Legal name | **Have it** — Balmes Balmes - Maximilian Kammermeier & Paul Pfeiffer GbR |
-| Authorised representatives | **Have it** — Maximilian Kammermeier, Paul Pfeiffer |
-| Registered postal address | **MISSING** — required, no substitute. A c/o or business address is fine; a PO box is not |
-| Email | **Have it** — info@balmesbalmes.com |
-| Phone | Optional if email is responsive |
-| VAT ID (USt-IdNr.) | **Unknown** — `Balmes Balmes/CLAUDE.md` mentions reverse-charge B2B invoicing, which implies one exists. Required *only if* the GbR has one |
+| Legal name | Balmes Balmes – Maximilian Kammermeier & Paul Pfeiffer GbR |
+| Address | Brunnenstr. 49, 10115 Berlin, Deutschland |
+| Representatives | Maximilian Kammermeier, Paul Pfeiffer |
+| Contact | info@balmesbalmes.com |
 
-I have deliberately **not** created `impressum.html` with placeholder text. A page with a fake address is worse than no page: it would look done, and it would be wrong on a legal notice. Give me the address and it is a ten-minute build.
+**Still open: the VAT ID (USt-IdNr.).** `Balmes Balmes/CLAUDE.md` mentions cross-border reverse-charge B2B invoicing, which implies the GbR has one. If it does, § 5 requires it on this page and I should add it. If it does not, the page is complete as it stands. I have left it out rather than invent it.
 
-Until then the preview's `Legal` link is an inert `#`.
+The page is styled from `assets/brand.css`, so it **ships with the redesign, not before it** — it would be the only page on the new system otherwise. It is `noindex`, which is normal for a legal notice.
 
 ---
 

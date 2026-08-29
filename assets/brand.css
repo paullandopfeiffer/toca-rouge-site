@@ -307,7 +307,22 @@ body {
   font-family: var(--tr-font-display);
   font-weight: var(--tr-weight-bold);
   font-size: clamp(1.75rem, 8vw, 2.75rem);   /* floor is 28px — do not lower */
-  line-height: 1.08;
+  /* Measured off the poster artwork: cap heights 163px, baseline steps 162 and
+     164px, which at Helvetica Neue's measured 0.71em cap height is line-height
+     0.72 -- solid leading, caps essentially touching.
+
+     0.88 is used instead, and the 0.16em difference is the comma in
+     "SEP 12TH, 2026". Measured in-browser, the comma descends 0.16em below the
+     baseline, so a line carrying one spans 0.87em of ink; anything below that
+     drops the comma onto the caps of the line beneath. The poster escapes this
+     only because its comma happens to land in the word-space between TILL and
+     6:00, an accident of that artwork's exact line widths which does not
+     survive at web sizes.
+
+     0.88 is the tightest value that keeps the comma clear (0.71 + 0.16 = 0.87,
+     plus a hair). Remove the comma from the copy and 0.72 becomes correct and
+     literally matches the poster -- see BRAND_INTEGRATION_PLAN.md. */
+  line-height: 0.88;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--tr-red);
@@ -351,7 +366,10 @@ a:hover { color: var(--tr-fg); }
   font-size: var(--tr-text-xl);   /* 20px — see note above. Do not lower. */
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: 0.01em;
+  /* Uppercase to match the poster's register. Caps need more tracking than
+     lower case at the same size or they read cramped. */
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
