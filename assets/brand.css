@@ -169,6 +169,13 @@ body {
 .tr-bg {
   position: relative;
   background-color: var(--tr-ink);
+  /* Plain JPEG first. image-set() with type() is Chrome 113 / Safari 17 / FF 113;
+     where it is unsupported the entire declaration is invalid, and since the
+     scrim gradient lives in the same declaration the page would lose the scrim
+     as well as the texture. The fallback keeps both. */
+  background-image:
+    linear-gradient(to bottom, rgba(11, 11, 12, 0.52), rgba(11, 11, 12, 0.82)),
+    url("bg/texture-portrait-1080.jpg");
   background-image:
     linear-gradient(to bottom, rgba(11, 11, 12, 0.52), rgba(11, 11, 12, 0.82)),
     image-set(url("bg/texture-portrait-1080.webp") type("image/webp"),
@@ -182,6 +189,9 @@ body {
   .tr-bg {
     background-image:
       linear-gradient(to bottom, rgba(11, 11, 12, 0.52), rgba(11, 11, 12, 0.82)),
+      url("bg/texture-landscape-1920.jpg");
+    background-image:
+      linear-gradient(to bottom, rgba(11, 11, 12, 0.52), rgba(11, 11, 12, 0.82)),
       image-set(url("bg/texture-landscape-1920.webp") type("image/webp"),
                 url("bg/texture-landscape-1920.jpg")  type("image/jpeg"));
   }
@@ -191,11 +201,20 @@ body {
    the privacy notice, for one. Same ground, no imagery, no extra request. */
 .tr-bg-flat { background-color: var(--tr-ink); }
 
-/* Radial red bloom. Pure CSS, no image request, echoes the flyer's glow. */
+/* Radial red bloom. Pure CSS, no image request, echoes the flyer's glow.
+
+   z-index:-1 is load-bearing. Without it this pseudo-element is a positioned
+   descendant and paints ABOVE the page's in-flow text, tinting it: the white
+   caption rendered #F3CBC7 instead of #F5F5F5, and the red type was measurably
+   washed. At -1 it paints after the parent's background but before in-flow
+   content, which is where a background glow belongs. Do not remove, and do not
+   give .tr-bloom its own stacking context (a z-index or a transform on it would
+   trap this pseudo-element inside and put it back on top of the text). */
 .tr-bloom::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: -1;
   pointer-events: none;
   background: radial-gradient(60% 45% at 50% 38%,
               rgba(234, 36, 19, 0.26), rgba(234, 36, 19, 0) 72%);
@@ -505,6 +524,8 @@ a:hover { color: var(--tr-fg); }
 .tr-stack-6 { display: flex; flex-direction: column; gap: var(--tr-space-6); }
 
 .tr-screen {
+  min-height: 100vh;    /* fallback first — svh is Safari 15.4+ / Chrome 108+,
+                           and without this older browsers get min-height:auto */
   min-height: 100svh;   /* svh, not vh: avoids the mobile URL-bar jump */
   display: flex;
   flex-direction: column;
@@ -517,7 +538,15 @@ a:hover { color: var(--tr-fg); }
   font-size: var(--tr-text-xs);
   color: var(--tr-muted);
 }
-.tr-footer a { color: var(--tr-muted); text-decoration: underline; }
+/* WCAG 2.5.8 sets a 24x24 CSS-px minimum target. At 12px these links were about
+   14px tall; the padding brings the hit area up without changing the type size. */
+.tr-footer a {
+  color: var(--tr-muted);
+  text-decoration: underline;
+  display: inline-block;
+  padding: var(--tr-space-2) var(--tr-space-1);
+  min-height: 24px;
+}
 .tr-footer a:hover { color: var(--tr-fg); }
 
 /* -----------------------------------------------------------------------------
@@ -572,3 +601,339 @@ input:focus-visible,
 @media (forced-colors: active) {
   .tr-btn--primary { forced-color-adjust: none; }
 }
+
+/* =============================================================================
+   11. SITE LAYER
+
+   Styles the class names and ids the pages ALREADY carry, rather than requiring
+   new ones. This is what keeps signup.html's <form> untouched: every field is
+   reached through an id that was already in the markup, so not one attribute
+   inside <form> has to change.
+
+   Page context comes from a class on <body>, which is outside every form.
+   ========================================================================== */
+
+/* ---- Shared shell -------------------------------------------------------- */
+
+.wrap {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--tr-space-7) var(--tr-space-5);
+}
+
+.page-home .wrap,
+.page-404 .wrap  { text-align: center; }
+.page-privacy .wrap,
+.page-legal .wrap { max-width: 680px; }
+.page-qr .wrap    { max-width: 560px; text-align: center; }
+
+.page-home,
+.page-404,
+.page-qr {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Flat ground where the texture would fight the content */
+.page-signup,
+.page-privacy,
+.page-legal { background-color: var(--tr-ink); }
+
+/* ---- The mark ------------------------------------------------------------ */
+
+.brand-lockup { margin: 0 0 var(--tr-space-4); }
+.brand-lockup img {
+  display: block;
+  width: clamp(240px, 62vw, 400px);
+  height: auto;
+  margin: 0 auto;
+}
+.page-qr .brand-lockup img { width: clamp(200px, 52vw, 330px); }
+
+/* The QR pages carry the lockup inside <h2 class="wordmark">, which is the
+   accessible name for the .party section via aria-labelledby. The <img> alt
+   supplies that name, so the heading must keep the image as its only content. */
+.wordmark { margin: 0 0 var(--tr-space-4); }
+.wordmark img {
+  display: block;
+  width: clamp(200px, 52vw, 330px);
+  height: auto;
+  margin: 0 auto;
+}
+
+/* Small wordmark used as a header on the inner pages */
+.brand-mini {
+  display: block;
+  width: clamp(120px, 30vw, 160px);
+  height: auto;
+  margin: 0 0 var(--tr-space-6);
+}
+.page-home .brand-mini,
+.page-qr .brand-mini { margin-inline: auto; }
+
+/* ---- Type ---------------------------------------------------------------- */
+
+h1 {
+  font-family: var(--tr-font-display);
+  font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+  font-weight: 700;
+  line-height: var(--tr-leading-tight);
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--tr-space-4);
+}
+h2 {
+  font-family: var(--tr-font-display);
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 700;
+  line-height: var(--tr-leading-tight);
+  margin: 0 0 var(--tr-space-3);
+}
+p { margin: 0 0 var(--tr-space-4); }
+
+/* Genre line. Restored deliberately: it is the only thing telling someone who
+   scanned a sticker what kind of night this is. */
+.subhead,
+.genre {
+  font-size: var(--tr-text-lg);
+  color: var(--tr-fg);
+  margin: 0 0 var(--tr-space-5);
+}
+.page-signup .subhead {
+  font-size: var(--tr-text-base);
+  color: var(--tr-muted);
+  margin-bottom: var(--tr-space-6);
+}
+
+/* Event details, set as the poster sets them. See section 5 for why 0.88. */
+.details {
+  font-family: var(--tr-font-display);
+  font-weight: var(--tr-weight-bold);
+  font-size: clamp(1.75rem, 8vw, 2.75rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--tr-red);
+  margin: 0 0 var(--tr-space-4);
+}
+
+.venue {
+  font-family: var(--tr-font-display);
+  font-weight: var(--tr-weight-bold);
+  font-size: clamp(0.875rem, 3.4vw, 1.0625rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tr-fg);
+  margin: 0 0 var(--tr-space-6);
+}
+
+.eyebrow {
+  font-size: var(--tr-text-sm);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tr-muted);
+  margin: 0 0 var(--tr-space-4);
+}
+
+.reveal     { font-size: var(--tr-text-lg); color: var(--tr-fg); margin: 0 0 var(--tr-space-3); }
+.reveal-sub { font-size: var(--tr-text-base); color: var(--tr-muted); margin: 0 0 var(--tr-space-7); }
+.no         { color: var(--tr-red-text); }
+
+.party { margin: 0 0 var(--tr-space-7); }
+
+/* ---- Actions ------------------------------------------------------------- */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tr-space-2);
+  margin-bottom: var(--tr-space-6);
+}
+
+.cta {
+  display: inline-block;
+  padding: var(--tr-space-3) var(--tr-space-6);
+  border: 1px solid transparent;
+  border-radius: var(--tr-radius-pill);
+  font-family: inherit;
+  font-size: var(--tr-text-xl);   /* 20px. White on brand red is 4.41:1, which
+                                     meets AA at the large-text threshold only.
+                                     Do not lower this without changing the fill. */
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--tr-transition), background-color var(--tr-transition);
+  background-color: var(--tr-red);
+  color: #fff;
+}
+.cta:hover { opacity: 0.88; color: #fff; }
+
+/* Secondary: the border is the only thing identifying this control, so it uses
+   --tr-border-strong (3.88:1) rather than the decorative --tr-border. */
+.cta.secondary {
+  background-color: transparent;
+  color: var(--tr-fg);
+  border-color: var(--tr-border-strong);
+}
+.cta.secondary:hover { background-color: var(--tr-panel); color: var(--tr-fg); }
+
+.page-qr .cta {
+  display: block;
+  /* Full-width already, so the generous horizontal padding only steals room
+     from the label and forces "GET ON THE GUEST LIST" onto two lines. */
+  padding-inline: var(--tr-space-4);
+}
+.cta-note {
+  font-size: var(--tr-text-sm);
+  color: var(--tr-muted);
+  margin: 0 0 var(--tr-space-5);
+}
+.actions .cta-note:last-child { margin-bottom: 0; }
+
+/* ---- Back link and footer ------------------------------------------------ */
+
+a.back {
+  display: inline-block;
+  margin-bottom: var(--tr-space-6);
+  color: var(--tr-muted);
+  text-decoration: none;
+  font-size: var(--tr-text-sm);
+  padding: var(--tr-space-2) 0;
+  min-height: 24px;
+}
+a.back:hover { color: var(--tr-fg); }
+
+footer {
+  margin-top: var(--tr-space-7);
+  font-size: var(--tr-text-xs);
+  color: var(--tr-muted);
+}
+footer a {
+  color: var(--tr-muted);
+  text-decoration: underline;
+  display: inline-block;
+  padding: var(--tr-space-2) var(--tr-space-1);
+  min-height: 24px;
+}
+footer a:hover { color: var(--tr-fg); }
+
+/* ---- Signup form ---------------------------------------------------------
+   Every selector below is an id or class that ALREADY exists in signup.html.
+   Nothing here requires an attribute change inside <form>.
+   -------------------------------------------------------------------------- */
+
+#signup-form {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tr-space-5);
+}
+
+#signup-form label {
+  display: block;
+  font-size: var(--tr-text-sm);
+  color: var(--tr-muted);
+  margin-bottom: var(--tr-space-2);
+}
+
+#signup-form input[type="text"],
+#signup-form input[type="email"],
+#signup-form input[type="tel"] {
+  width: 100%;
+  padding: var(--tr-space-3) var(--tr-space-4);
+  background-color: var(--tr-field);
+  border: 1px solid var(--tr-border-strong);
+  border-radius: var(--tr-radius-box);
+  color: var(--tr-fg);
+  font-family: inherit;
+  font-size: var(--tr-text-base);   /* 16px — anything smaller makes iOS Safari
+                                       zoom the viewport on focus */
+  line-height: 1.4;
+}
+#signup-form input::placeholder { color: var(--tr-muted); opacity: 1; }
+#signup-form input[type="text"]:focus,
+#signup-form input[type="email"]:focus,
+#signup-form input[type="tel"]:focus {
+  outline: none;
+  border-color: var(--tr-red);
+  box-shadow: 0 0 0 2px rgba(234, 36, 19, 0.35);
+}
+
+/* The honeypot must keep its own positioning — it is anti-spam, not layout. */
+.hp { position: absolute; left: -9999px; width: 0; height: 0; overflow: hidden; }
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tr-space-3);
+  font-size: var(--tr-text-sm);
+  color: var(--tr-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+.consent input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--tr-red);
+}
+
+.dress {
+  background-color: var(--tr-panel);
+  border: 1px solid var(--tr-border);
+  border-radius: var(--tr-radius-box);
+  padding: var(--tr-space-4);
+  font-size: var(--tr-text-sm);
+  line-height: 1.5;
+  color: var(--tr-fg);
+  margin: 0;
+}
+.dress strong { color: var(--tr-red-text); }
+
+.privacy-note { font-size: var(--tr-text-xs); color: var(--tr-muted); line-height: 1.5; margin: 0; }
+.privacy-note a { color: var(--tr-red-text); }
+
+button.submit {
+  display: block;
+  width: 100%;
+  padding: var(--tr-space-3) var(--tr-space-6);
+  border: none;
+  border-radius: var(--tr-radius-pill);
+  background-color: var(--tr-red);
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--tr-text-xl);   /* 20px — see .cta note above */
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: opacity var(--tr-transition);
+}
+button.submit:hover { opacity: 0.88; }
+button.submit:disabled { opacity: 0.5; cursor: default; }
+
+.error { display: none; font-size: var(--tr-text-sm); color: var(--tr-red-text); margin: 0; }
+.error.show { display: block; }
+
+.note { margin-top: var(--tr-space-6); font-size: var(--tr-text-sm); color: var(--tr-muted); line-height: 1.5; }
+.note a { color: var(--tr-red-text); }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---- Legal pages --------------------------------------------------------- */
+.page-privacy p,
+.page-legal p { line-height: var(--tr-leading-body); }
+.page-privacy a,
+.page-legal a { color: var(--tr-red-text); }

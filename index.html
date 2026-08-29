@@ -15,127 +15,32 @@
 <meta property="og:url" content="https://tocarougebarcelona.com/">
 <meta property="og:title" content="Toca Rouge — 12 September, Boris">
 <meta property="og:description" content="Toca Rouge. Afro House &amp; tech house. 12 September, Boris. Get on the list.">
-<!-- TODO - link-preview image. Uncomment these four lines once og.jpg
-     (1200x630, under ~300KB) exists at the site root. Until then WhatsApp and
-     Instagram render a title-and-description card, which is still far better
-     than a bare URL. Do NOT point og:image at a file that does not exist.
-<meta property="og:image" content="https://tocarougebarcelona.com/og.jpg">
+<meta property="og:image" content="https://tocarougebarcelona.com/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Toca Rouge">
 <meta name="twitter:card" content="summary_large_image">
--->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0b0c'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23e4002b'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-<style>
-  :root {
-    /* ---- Toca Rouge identity tokens -------------------------------------
-       This block is intentionally IDENTICAL on every page of the site. The
-       finished Hausmann/Polvo identity is due 2026-08-31; when it lands, this
-       block is the only thing that changes, pasted once per page. Keeping them
-       in sync is worth a couple of unused declarations per file.
-       Deliberately does NOT list the page filenames: the two campus landing
-       pages must never name the other school, source comments included.
-       Current values are the v1 interim identity (brand/identity.md). ------ */
-    --bg: #0b0b0c;
-    --fg: #f5f5f5;
-    --accent: #e4002b;
-    /* #e4002b is 4.06:1 on --bg: fine for large text and for white-on-red
-       buttons (4.85:1), below the 4.5:1 WCAG AA floor for small text. This
-       tint is 6.60:1 and is used ONLY where red type is under ~18px. The
-       brand red itself is never changed. */
-    --accent-text: #ff5c77;
-    --muted: #9a9a9a;
-    --field: #1a1a1c;
-    --border: #2c2c2f;
-    /* --border is 1.41:1 on --bg: fine as a decorative edge on a filled
-       surface, far below the 3:1 WCAG floor for a boundary that is the only
-       thing identifying a control. --border-strong (3.71:1) is for those. */
-    --border-strong: #6b6b70;
-    --focus: #ffffff;
-    --radius-pill: 999px;
-    --radius-box: 8px;
-    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    --font-display: 'Bebas Neue', var(--font-body);
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--font-body);
-  }
-  .wrap {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 8vh 6vw;
-  }
-  h1 {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 13vw, 6.5rem);
-    letter-spacing: 0.03em;
-    margin: 0 0 0.5rem;
-  }
-  h1 .toca { color: var(--fg); }
-  h1 .rouge { color: var(--accent); }
-  .subhead {
-    font-size: clamp(1rem, 3vw, 1.4rem);
-    color: var(--fg);
-    margin: 0 0 0.25rem;
-  }
-  .details {
-    font-size: 0.95rem;
-    color: var(--muted);
-    margin: 0 0 2.5rem;
-  }
-  .cta {
-    display: inline-block;
-    padding: 0.9rem 2.2rem;
-    background: var(--accent);
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    border-radius: var(--radius-pill);
-    font-size: 1.05rem;
-    transition: opacity 0.15s ease;
-  }
-  .cta:hover { opacity: 0.85; }
-  footer {
-    margin-top: 3rem;
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-  footer a { color: var(--muted); }
-
-  /* Keyboard focus. Deliberately :focus-visible, not :focus — a mouse click
-     keeps the quiet border treatment below, while keyboard navigation gets a
-     ring that clears WCAG's 3:1 non-text contrast against every surface here. */
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-  }
-</style>
+<link rel="icon" href="/assets/favicon.svg">
+<link rel="stylesheet" href="/assets/brand.css">
 </head>
-<body>
-  <div class="wrap">
-    <h1><span class="toca">TOCA</span> <span class="rouge">ROUGE</span></h1>
+<body class="page-home tr-bg tr-bloom">
+  <main class="wrap">
+    <!-- The brand name is artwork, not type: the delivered lockup as outlined
+         vector, so it renders identically whatever fonts the visitor has. The
+         <h1> stays so the page keeps a heading; its alt text is that heading. -->
+    <h1 class="brand-lockup">
+      <img src="/assets/logo/tocarouge-logo-red.svg" alt="Toca Rouge"
+           width="268" height="105">
+    </h1>
     <p class="subhead">House music.</p>
-    <p class="details">12 September · Boris · Barcelona</p>
+    <p class="details">Sep 12th, 2026<br>Till 6:00<br>Barcelona</p>
+    <p class="venue">At Boris Club</p>
     <a class="cta" href="/signup.html" id="signup-link">Get on the list</a>
     <footer>
-      Balmes Balmes GbR · <a href="/privacy.html" id="privacy-link">Privacy</a>
+      <a href="/privacy.html" id="privacy-link">Privacy</a> ·
+      <a href="/impressum.html">Legal</a>
     </footer>
-  </div>
+  </main>
   <script>
     (function () {
       // Carry ?src= through to the signup page. Without this, a campaign link

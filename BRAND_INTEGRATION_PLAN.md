@@ -320,7 +320,9 @@ Paul asked (2026-08-29) for the company name off the site. Design-wise it goes i
 | Representatives | Maximilian Kammermeier, Paul Pfeiffer |
 | Contact | info@balmesbalmes.com |
 
-**Still open: the VAT ID (USt-IdNr.).** `Balmes Balmes/CLAUDE.md` mentions cross-border reverse-charge B2B invoicing, which implies the GbR has one. If it does, § 5 requires it on this page and I should add it. If it does not, the page is complete as it stands. I have left it out rather than invent it.
+**VAT ID: closed 2026-08-29 — the GbR does not have one.** § 5 DDG requires a USt-IdNr. only *soweit vorhanden* (where one exists), so with no VAT ID the page is complete as written and no line is needed. Nothing further to add.
+
+*Separate flag, outside this project's scope:* `Balmes Balmes/CLAUDE.md` lists cross-border reverse-charge B2B invoicing (German GbR → Spanish business) as live and open. Reverse-charge invoicing normally requires a USt-IdNr. That is a tax question, not a website one, and it does not block anything here — but the two facts sit oddly together and it is worth checking with whoever does the books before the first Spanish invoice goes out.
 
 The page is styled from `assets/brand.css`, so it **ships with the redesign, not before it** — it would be the only page on the new system otherwise. It is `noindex`, which is normal for a legal notice.
 
@@ -335,3 +337,120 @@ This repo's only working copy is at:
 ```
 
 `main` is clean and fully pushed, so nothing is lost if that folder is deleted — **but this `brand-integration` branch is local and unpushed, and would go with it.** The vault records the site repo as still needing a stable home. Worth moving before this branch accumulates more work.
+
+---
+
+# 10. Independent review, 2026-08-29
+
+Adversarial pass over the plan, the assets, `brand.css` and the live pages before any funnel code is touched. Findings are evidenced, not asserted. Four of them are defects in this plan's own work.
+
+## 10.1 Critical
+
+**C1 — The red bloom was painting on top of the page text.** *(found and fixed in `brand.css`; no HTML touched)*
+`.tr-bloom::before` was `position:absolute` with no `z-index`, making it a positioned descendant that paints above in-flow content. Evidence: the white venue caption rendered `#F3CBC7` instead of its token `#F5F5F5`, and rendering the same page with the bloom disabled changed the type pixels. Every contrast figure previously quoted in section 4 was therefore measuring the wrong thing.
+*Why it matters:* a decorative overlay silently tinting all body text, and invalidating the accessibility numbers used to sign the design off.
+*Fixed:* `z-index: -1`, which paints after the parent background but before content. Re-measured — caption 16.57:1 (was 9.30), date block 5th-percentile 4.18:1 (was 3.74). Both now pass with real margin.
+
+**C2 — Publishing `brand-assets/` exposes 6.2 MB of source artwork whose ownership is unconfirmed.**
+GitHub Pages serves the whole repo. Merging this branch puts all 36 delivered files at `tocarougebarcelona.com/brand-assets/logo/...`, publicly downloadable. `Toca Rouge.md` still records *"fee amount and artwork ownership from item 2 above still unconfirmed"* from the 2026-08-21 kickoff.
+*Why it matters:* republishing a designer's full source package before ownership is settled is a commercial and legal risk, and it is irreversible once indexed.
+*Recommendation:* do not deploy `brand-assets/`. Either keep it out of the merge (originals stay on Drive, which is their home) or rename to `_brand-assets/`, which Jekyll excludes by default on GitHub Pages. Same for `assets/preview/`.
+
+## 10.2 High
+
+**H1 — The proposed index has no `<h1>`.** The preview replaces the heading with an `<img>` and adds no heading element; `grep -c "<h1"` returns 0, against 1 on the live page.
+*Why:* the page loses its document outline. Screen-reader users lose the primary landmark, and the site drops its only `<h1>` on the page that most needs one.
+*Fix:* wrap the mark — `<h1><img src="…" alt="Toca Rouge"></h1>`. The alt text becomes the heading text. Costs nothing visually.
+
+**H2 — The plan's own "no change inside `<form>`" rule contradicts its styling method.** Section 6 says to map existing markup onto `.tr-input` / `.tr-consent` classes, which means editing every input's `class` attribute — inside the form the plan forbids touching.
+*Why:* every hand-edit inside `<form>` is a chance to disturb a `name="entry.*"`, and the stated verification ("diff shows no change inside `<form>`") could never pass.
+*Fix, and it is a strict improvement:* `signup.html` **already has `id="signup-form"` and an id on every field.** Style the form entirely through selectors on hooks that already exist — `#signup-form input[type="email"]`, `.consent`, `.dress`, `.submit`, `.error`, `.hp`. **Zero attributes change inside `<form>`.** The only edit to `signup.html` becomes: delete the `<style>` block, add the `<link>`. The same applies to every other page — they already carry `.wrap`, `.cta`, `.subhead`, `.details`, `.eyebrow`, `.party`, `.wordmark`, `.actions`, `.cta-note`, `.back`, `.note`. `brand.css` should carry a compatibility layer targeting those existing names rather than requiring new ones.
+
+**H3 — The favicon is still the rejected v1 red on all seven pages,** including the `impressum.html` written yesterday, which copied it. Evidence: every page carries `fill='%23e4002b'`; the brand red is `#EA2413`.
+*Why:* the tab icon is the most repeated brand surface, and it would ship showing the colour this whole exercise replaces.
+*Fix:* update to `#EA2413`, and use the isotype path rather than a plain circle — the delivered `TR` monogram is 1.2 KB and inlines comfortably as a data URI.
+
+**H4 — `index.html` loses "House music."** The live page carries a genre line; the reworked composition drops it for the venue and date block.
+*Why:* this is the one line telling a cold visitor — someone who scanned a sticker knowing nothing — what kind of night it is. Removing it trades the page's only qualifying information for a detail (the venue) most scanners do not yet care about. That is a conversion regression, not a style choice.
+*Fix:* restore it as a short line under the mark. The poster carries the same idea in its lineup; the web page has no lineup, so the genre line is doing that work.
+
+## 10.3 Medium
+
+**M1 — `min-height: 100svh` had no fallback.** *(fixed)* On Safari below 15.4 the declaration is dropped and the hero collapses to `auto`. Added `min-height: 100vh` first.
+
+**M2 — `image-set()` with `type()` had no fallback.** *(fixed)* It is Chrome 113 / Safari 17 / Firefox 113. Where unsupported the *entire* `background-image` declaration is invalid — and because the scrim gradient shares that declaration, the page would lose the scrim as well as the texture, putting red type on raw bright artwork. A plain-JPEG declaration now precedes it.
+
+**M3 — Footer links were below the minimum target size.** *(fixed)* At 12px the `Privacy · Legal` links were roughly 14px tall against the 24×24 CSS-px floor of WCAG 2.5.8. Padding now lifts the hit area without changing type size.
+
+**M4 — WhatsApp as the primary QR-page CTA makes campus performance unmeasurable.** `chat.whatsapp.com` cannot carry `?src=`, so a scanner who takes the primary action is never recorded against `qr_esade` / `qr_uic` — the very codes registered as `CAMPAIGNS` rows 5 and 6 in `BALMES_OS.xlsx` with a `COUNTIF` against the sheet.
+*Why:* the campus run will look like it underperformed, because only the secondary CTA is counted. This is a measurement gap, not a reason to reverse the decision — the hierarchy itself is right, since the Community is the stickier destination.
+*Recommendation, 2026-08-29 — swap the hierarchy: guest list primary, WhatsApp secondary.* Four reasons, and one of them is decisive:
+1. It is the only path that carries `?src=`, and measuring campus is the entire reason for the sticker run.
+2. It is the only path that produces an **owned** contact. Community membership lives on Meta's platform and cannot be exported; an email in the sheet can.
+3. It is the only path that shows the privacy notice before anything is collected.
+4. **Nothing is lost by demoting WhatsApp.** `signup.html` already displays the Community join link on the page, so a visitor routed to the guest list is offered the Community on the very next screen. A visitor routed to WhatsApp first is simply gone from the funnel.
+
+This also restores the original 2026-08-27 decision, which chose the funnel over the Community for exactly reasons 1–3. The stickers are not printed yet, so the change costs nothing now and cannot be made later.
+
+*Against it:* WhatsApp is one tap and the guest list is a three-field form, so raw action rate will be higher with WhatsApp first. If the only goal is bodies in the room on 12 September, that argues for leaving it. It is a real trade and it is Paul's call — but an unmeasured channel cannot tell you whether to run the next one.
+
+**M5 — Phone is a required field.** Three required fields, and phone is the highest-friction of them on a page reached from a sticker.
+*Recommendation, 2026-08-29 — make phone optional. Keep the field, drop `required`.*
+
+**The reason it was collected no longer exists.** Commit `8719936` (22 Aug) removed the promise *"we'll add you to our WhatsApp Community ourselves using the number you give us"* — nobody owned that task and it was never being done — and replaced it with a self-serve invite link. The manual add was the only thing that needed a phone number. The `required` attribute stayed behind; the purpose did not.
+
+Supporting evidence: `Boris Campaign Runbook`'s own remedy for high-visits-low-signups is literally *"cut a field if the form feels long"*, and the backstage list Adri asked for takes **name, surname and email** — no phone — and is compiled by Paul by hand rather than from this form.
+
+*Why optional rather than deleted:* keeping the input preserves the number for anyone happy to give it, leaves `entry.1450901064` and the sheet column untouched, and is a one-attribute change that reverts cleanly. Deleting the field would change the shape of the response sheet.
+
+*Safe server-side:* the three Google Form fields were already made not-required, so removing `required` from the page cannot cause a rejected submission.
+
+*How to implement:* as its **own isolated commit**, not folded into the restyle — the diff should be one attribute on one line, so it is reviewable at a glance. It deliberately breaks the "no change inside `<form>`" rule, which is exactly why it must not hide inside a large styling diff.
+
+*Timing:* do it before Day 0 (31 August) so the whole campaign runs against one consistent form and the runbook's conversion thresholds measure one thing.
+
+## 10.4 Low
+
+**L1 — `impressum.html` uses an absolute `/assets/brand.css` while the preview uses a relative path.** Correct today because the custom domain serves from root; it would break on a project-pages subpath. Keep absolute for all real pages and make it consistent.
+
+**L2 — `.tr-bloom` depends on an ancestor being positioned.** It works because `.tr-bg` sets `position: relative`, but `.tr-bloom` used alone would escape. Give it its own `position: relative`.
+
+**L3 — "TILL 6:00" is ambiguous** to anyone not fluent in club listings — it reads as an end time but does not say a.m. The poster has context the web page lacks.
+
+## 10.5 What the review found to be genuinely good
+
+- **The redesign removes a real GDPR exposure.** `index`, `esade` and `uic` currently pull Bebas Neue from `fonts.googleapis.com` and `fonts.gstatic.com`, transmitting every visitor's IP to Google. For a German company that is a live liability (LG München, 2022). Moving to a device-installed font stack removes both third-party domains entirely.
+- **Weight and privacy:** proposed mobile index is **23.1 KB over 4 requests, zero third-party, zero webfonts**, against a current page with two third-party domains and a render-blocking font.
+- **`text-transform: uppercase` on the CTA** keeps the accessible name as "Get on the list" in the DOM, which is the correct way to do caps.
+- The marks are outlined vectors, so the brand name carries **no font licensing exposure**, and the font is referenced rather than embedded.
+- Contrast, focus-visible, reduced-motion and forced-colors handling are all present and measured rather than assumed.
+
+## 10.6 Revised implementation route
+
+**Design principles.** Poster first: the mark is artwork and always the largest element; type is Helvetica Neue Bold, uppercase, tight; red is used at size and never for small text; the texture is atmosphere under a solved scrim, never a backdrop for copy. One primary action per page.
+
+**Token changes required:** none beyond the four fixes already applied (bloom `z-index`, `svh` fallback, `image-set` fallback, footer target size).
+
+**Per-page CTA hierarchy**
+| Page | Primary | Secondary | Notes |
+|---|---|---|---|
+| `index` | Get on the list | — | restore the genre line; wrap the mark in `<h1>` |
+| `signup` | Get on the list (submit) | WhatsApp, then FourVenues fallback | style via existing ids only |
+| `esade` / `uic` | Join the WhatsApp Community | Get on the guest list | hierarchy unchanged; never name the other school |
+| `privacy` / `impressum` | — | back to home | flat ground, no texture |
+| `404` | Get on the list | — | same as index minus the hero |
+
+**Asset rules.** SVG for every on-page mark; pre-coloured file for `<img>`, `currentColor` file only when inlined. Never set both width and height. Backgrounds only via `.tr-bg`. `brand-assets/` and `assets/preview/` must not deploy.
+
+**Ranked changes before implementation**
+1. C2 — keep `brand-assets/` and `assets/preview/` out of the deploy *(blocking)*
+2. H2 — restyle through existing ids/classes; zero attribute changes inside `<form>` *(blocking)*
+3. H1 — restore an `<h1>` around the mark
+4. H3 — favicon to `#EA2413`, isotype path
+5. H4 — restore the genre line on `index`
+6. L1, L2 — path consistency, `.tr-bloom` positioning
+7. M4, M5 — Paul's decisions, not code changes
+
+**Do not touch.** Section 7 stands in full, and H2 strengthens it: after implementation, `git diff` must show **no change of any kind inside `<form>`** and **no change inside any `<script>`** on `signup.html`, `index.html`, `esade.html`, `uic.html` or `404.html`. Google Form action/method, all six `entry.*` names, the consent value, the honeypot, the iframe target set from JS, the load-redirect, the 12-second timeout, `BORIS_LINK` read from the anchor, the `?src=` trim-and-cap, the FourVenues and WhatsApp URLs, `qr_esade` / `qr_uic`, and `CNAME`.
+
+**Verdict: ready after the five corrections above.** The direction is sound and the funnel is safe; the blocking items are a deployment-scope decision and a styling method, neither of which touches funnel logic.

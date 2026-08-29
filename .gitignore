@@ -1,0 +1,9 @@
+# Delivered source artwork. Home is Google Drive:
+#   BALMES BALMES/03_TOCA_ROUGE/brand/2026-08-29_TOCAROUGE_identity_polvo-v01/
+# Deliberately NOT tracked: GitHub Pages serves the whole repo, so tracking these
+# would publish 6.2 MB of Polvo's source files at tocarougebarcelona.com while
+# artwork ownership is still unconfirmed. Web-ready derivatives live in assets/.
+brand-assets/
+
+# Review artefacts. Not part of the site.
+assets/preview/
