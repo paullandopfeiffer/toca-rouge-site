@@ -45,7 +45,7 @@
       // Carry ?src= through to the signup page. Without this, a campaign link
       // that lands here loses its attribution the moment someone clicks the
       // CTA — the form would record a blank ref and the code would be lost.
-      var src = new URLSearchParams(window.location.search).get('src');
+      var src = (new URLSearchParams(window.location.search).get('src') || '').trim().slice(0, 64);
       if (src) {
         document.getElementById('signup-link').href =
           '/signup.html?src=' + encodeURIComponent(src);
