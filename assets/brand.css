@@ -3,9 +3,9 @@
    Design tokens and reusable base styling for the Polvo identity (v01,
    delivered 2026-08-29).
 
-   STATUS: NOT LINKED INTO ANY LIVE PAGE. This file is staged on the
-   `brand-integration` branch for review. The live pages still carry their own
-   inline :root token block and are untouched.
+   STATUS: LIVE. Linked from all seven pages via <link rel="stylesheet"> as of
+   the 2026-08-29 brand-integration merge. No page carries an inline <style>
+   block or :root token block — this file is the only source of styling.
 
    Every contrast ratio quoted below was computed against the WCAG 2.1 relative
    luminance formula, not estimated. Where a value is marginal it says so.
