@@ -695,8 +695,9 @@ h2 {
 }
 p { margin: 0 0 var(--tr-space-4); }
 
-/* Genre line. Restored deliberately: it is the only thing telling someone who
-   scanned a sticker what kind of night this is. */
+/* Genre line. No page carries one: Paul decided on 2026-08-30 that the site
+   displays no genre line (the meta descriptions keep the genre, the pages do
+   not). This rule is retained unused in case that decision is revisited. */
 .subhead,
 .genre {
   font-size: var(--tr-text-lg);

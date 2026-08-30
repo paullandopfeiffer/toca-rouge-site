@@ -373,6 +373,7 @@ GitHub Pages serves the whole repo. Merging this branch puts all 36 delivered fi
 **H4 — `index.html` loses "House music."** The live page carries a genre line; the reworked composition drops it for the venue and date block.
 *Why:* this is the one line telling a cold visitor — someone who scanned a sticker knowing nothing — what kind of night it is. Removing it trades the page's only qualifying information for a detail (the venue) most scanners do not yet care about. That is a conversion regression, not a style choice.
 *Fix:* restore it as a short line under the mark. The poster carries the same idea in its lineup; the web page has no lineup, so the genre line is doing that work.
+*2026-08-30 — considered and declined (Paul's call). The site deliberately displays no genre line on any page; the genre is kept in the meta descriptions (which render the link-preview card) but not in the page DOM. Finding retained as the record of why the question was asked.*
 
 ## 10.3 Medium
 
@@ -447,7 +448,7 @@ Supporting evidence: `Boris Campaign Runbook`'s own remedy for high-visits-low-s
 2. H2 — restyle through existing ids/classes; zero attribute changes inside `<form>` *(blocking)*
 3. H1 — restore an `<h1>` around the mark
 4. H3 — favicon to `#EA2413`, isotype path
-5. H4 — restore the genre line on `index`
+5. H4 — restore the genre line on `index` — *2026-08-30: declined by Paul; the site displays no genre line. See the dated note on H4 in 10.2.*
 6. L1, L2 — path consistency, `.tr-bloom` positioning
 7. M4, M5 — Paul's decisions, not code changes
 
