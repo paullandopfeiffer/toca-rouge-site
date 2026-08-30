@@ -22,10 +22,18 @@
 </head>
 <body class="page-qr tr-bg tr-bloom">
   <main class="wrap">
-    <p class="eyebrow">ESADE</p>
-    <h1>There is <span class="no">no</span> Pilates class.</h1>
-    <p class="reveal">We made that bit up. You scanned it anyway, so it worked.</p>
-    <p class="reveal-sub">Here is the real invitation, ESADE. The ESADE Masters welcome party, the weekend before welcome week.</p>
+    <!-- Two arrival paths land on this page, so the opening is swapped at
+         runtime by the script at the foot of the document. What is written
+         here is the WhatsApp-group version, because that is the larger and
+         more time-critical audience and because it is the safe thing to show
+         if the script never runs. The campus-sticker reveal is restored by
+         the script when the src code says the visitor scanned one. -->
+    <div id="intro">
+      <p class="eyebrow">ESADE</p>
+      <h1>The ESADE Masters welcome party.</h1>
+      <p class="reveal">Saturday 12 September at Boris, the weekend before welcome week.</p>
+      <p class="reveal-sub">Come and meet the programme before term starts.</p>
+    </div>
 
     <section class="party" aria-labelledby="party-name">
       <h2 class="wordmark" id="party-name">
@@ -71,6 +79,27 @@
       var link = document.getElementById('guestlist-link');
       if (src && link) {
         link.href = '/signup.html?src=' + encodeURIComponent(src);
+      }
+
+      // The Pilates reveal is the payoff to a campus sticker, and it only
+      // makes sense to someone who scanned one. Since 2026-08-30 the nine
+      // ESADE WhatsApp groups link here too, and to them the joke is a
+      // non-sequitur -- they were never shown a fake Pilates class. So the
+      // markup above carries the welcome-party opening and the sticker
+      // reveal is put back only for QR traffic.
+      //
+      // Placement codes are `qr_esade` today and `ev1_qr_esade_a` once the
+      // stickers carry their own, so `qr` is matched as a whole underscore-
+      // delimited token rather than as a prefix. WhatsApp codes
+      // (`ev1_wa_esade_general`) never match.
+      var intro = document.getElementById('intro');
+      if (intro && /(^|_)qr(_|$)/.test(src)) {
+        intro.innerHTML =
+          '<p class="eyebrow">ESADE</p>' +
+          '<h1>There is <span class="no">no</span> Pilates class.</h1>' +
+          '<p class="reveal">We made that bit up. You scanned it anyway, so it worked.</p>' +
+          '<p class="reveal-sub">Here is the real invitation, ESADE. ' +
+          'The ESADE Masters welcome party, the weekend before welcome week.</p>';
       }
     })();
   </script>
