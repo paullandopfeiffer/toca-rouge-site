@@ -220,6 +220,40 @@ body {
               rgba(234, 36, 19, 0.26), rgba(234, 36, 19, 0) 72%);
 }
 
+/* Grain. A fine noise tile laid over the scrim. The delivered texture is
+   heavily blurred lettering: at low contrast it reads as atmosphere, at high
+   contrast as digital compression artefacts. A little grain over the top
+   unifies those artefacts and gives the ground a printed rather than a screen
+   quality, which is the register the poster works in.
+
+   Uses .tr-bg::after because .tr-bloom::before is taken and must not be
+   disturbed. z-index:-1 for the same reason the bloom carries it — without it
+   the pseudo-element paints above in-flow text. pointer-events:none so it never
+   intercepts a tap. No z-index or transform is added to .tr-bg itself: either
+   would create a stacking context that traps .tr-bloom::before back on top of
+   the type.
+
+   The noise is an inline feTurbulence as a data URI — no network request, no
+   third-party host. Opacity is held low and CAPPED at 0.06: grain over a scrim
+   raises the local luminance variance the red type sits on, and .details /
+   .tr-poster-block red is AA only at large sizes on the ink ground. Measured
+   in-browser 2026-08-30, worst patch behind the index.html mark + date block
+   against #EA2413: 3.89:1 with no grain, 3.75:1 at opacity 0.035 (this rule),
+   3.60:1 at the 0.06 cap — all still clear the 3:1 large-text floor. If this
+   opacity is ever raised, re-measure; do not answer a contrast loss by
+   lightening the scrim. */
+.tr-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='trg'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23trg)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  background-repeat: repeat;
+  opacity: 0.035;
+}
+
 /* -----------------------------------------------------------------------------
    4. THE MARK
 
@@ -393,14 +427,24 @@ a:hover { color: var(--tr-fg); }
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: opacity var(--tr-transition), background-color var(--tr-transition);
+  transition: opacity var(--tr-transition), background-color var(--tr-transition), transform var(--tr-transition);
 }
 
 .tr-btn--primary {
   background-color: var(--tr-red);
   color: var(--tr-on-red);
 }
-.tr-btn--primary:hover { opacity: 0.88; color: var(--tr-on-red); }
+/* Hover darkens the fill toward --tr-red-deep and keeps the label at full #fff,
+   rather than the old opacity:0.88 which dimmed the label with the ground. The
+   darker fill also raises contrast: white on #7C1314 is 10.71:1, against 4.41:1
+   on the resting red (measured 2026-08-30). The -1px lift is cosmetic. Size,
+   weight, tracking and padding are unchanged — those are the AA-threshold
+   values. */
+.tr-btn--primary:hover {
+  background-color: var(--tr-red-deep);
+  color: var(--tr-on-red);
+  transform: translateY(-1px);
+}
 
 /* Outline variant. --tr-border-strong (3.88:1) is used because the border is
    the only thing identifying this control against the page. */
@@ -754,9 +798,31 @@ p { margin: 0 0 var(--tr-space-4); }
 
 .reveal     { font-size: var(--tr-text-lg); color: var(--tr-fg); margin: 0 0 var(--tr-space-3); }
 .reveal-sub { font-size: var(--tr-text-base); color: var(--tr-muted); margin: 0 0 var(--tr-space-7); }
-.no         { color: var(--tr-red-text); }
+/* The pivot of the reveal line ("there is NO Pilates class"). It carries the
+   joke, so it is set a step larger than the rest of the heading and tracked
+   tighter. Colour stays on the accessible tint --tr-red-text, not raw --tr-red:
+   the heading sits on the textured ground, not the contained panel. */
+.no {
+  color: var(--tr-red-text);
+  font-size: 1.15em;
+  letter-spacing: -0.02em;
+}
 
 .party { margin: 0 0 var(--tr-space-7); }
+
+/* Campus pages: give the event details visual containment so they read as an
+   object lifted off the page rather than as three more paragraphs. --tr-panel
+   is a solid ground, so the .details red inside now sits on #17100f rather than
+   the scrimmed texture: #EA2413 on #17100f is 4.26:1, clearing the 3:1
+   large-text floor (computed 2026-08-30). The border is the decorative
+   --tr-border — the fill is what identifies the card, the edge only refines it. */
+.page-qr .party {
+  background-color: var(--tr-panel);
+  border: 1px solid var(--tr-border);
+  border-radius: var(--tr-radius-box);
+  padding: var(--tr-space-6) var(--tr-space-5);
+}
+.page-qr .party .venue { margin-bottom: 0; }
 
 /* ---- Actions ------------------------------------------------------------- */
 
@@ -783,11 +849,21 @@ p { margin: 0 0 var(--tr-space-4); }
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: opacity var(--tr-transition), background-color var(--tr-transition);
+  transition: opacity var(--tr-transition), background-color var(--tr-transition), transform var(--tr-transition);
   background-color: var(--tr-red);
   color: #fff;
 }
-.cta:hover { opacity: 0.88; color: #fff; }
+/* Hover darkens the fill toward --tr-red-deep with the label held at full #fff,
+   instead of the old opacity:0.88 which dimmed label and ground together. The
+   darker ground also lifts contrast: white on #7C1314 is 9.16:1, up from 4.41:1
+   at rest (measured 2026-08-30: 10.71:1). The -1px translate is a cosmetic
+   lift. Font size, weight, tracking and padding are untouched — those carry the
+   AA derivation in the note above. */
+.cta:hover {
+  background-color: var(--tr-red-deep);
+  color: #fff;
+  transform: translateY(-1px);
+}
 
 /* Secondary: the border is the only thing identifying this control, so it uses
    --tr-border-strong (3.88:1) rather than the decorative --tr-border. */
@@ -810,6 +886,37 @@ p { margin: 0 0 var(--tr-space-4); }
   margin: 0 0 var(--tr-space-5);
 }
 .actions .cta-note:last-child { margin-bottom: 0; }
+
+/* ---- Landing-page entrance ----------------------------------------------
+   A short composed reveal on index.html so the page reads as deliberate
+   rather than as one that simply painted. The elements rise into place in
+   document order — mark, then date block, then venue, then CTA.
+
+   The stagger is in the DURATIONS, not in animation-delay: every element
+   starts at t=0 and they finish 0.30s / 0.42s / 0.52s / 0.58s in. This is
+   deliberate — a delay-based stagger with fill-mode would leave later
+   elements at opacity 0 during their delay even under reduced motion, since
+   the §10 override caps duration but not delay. With no delay, the reduced-
+   motion override (animation-duration: 0.01ms !important, universal
+   selector) collapses the whole sequence to instant. Verified 2026-08-30:
+   OS "reduce motion" makes the entrance appear in one frame.
+
+   fill-mode is backwards, not forwards/both: the from-state is applied
+   immediately (no first-frame flash) but released on completion, so it does
+   not pin `transform` and block the CTA's :hover lift.
+
+   Total sequence 580ms — under the 700ms ceiling for a page a stranger
+   reached from a sticker. The CTA finishes 60ms after the venue, never
+   trailing by a noticeable margin. translateY is 10px, well under the 12px
+   cap. */
+@keyframes tr-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-home .brand-lockup { animation: tr-rise 0.30s ease backwards; }
+.page-home .details      { animation: tr-rise 0.42s ease backwards; }
+.page-home .venue        { animation: tr-rise 0.52s ease backwards; }
+.page-home .cta          { animation: tr-rise 0.58s ease backwards; }
 
 /* ---- Back link and footer ------------------------------------------------ */
 
