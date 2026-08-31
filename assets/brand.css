@@ -754,26 +754,29 @@ p { margin: 0 0 var(--tr-space-4); }
   margin-bottom: var(--tr-space-6);
 }
 
-/* Event details, set exactly as the poster sets them.
+/* Event details, in the poster's stacked-caps style but with a little more
+   leading than the poster itself.
 
-   0.76 is measured off the artwork: on the 1080x1440 flyer the three lines run
-   cap heights of ~155px with baseline steps of ~165px, so the baseline step is
-   about 6% larger than the cap height -- solid, tight leading with a hairline
-   of air between lines, not caps touching. Against Helvetica Neue's 0.714em cap
-   height that is line-height 1.065 * 0.714 = 0.76. The earlier 0.72 measured
-   the cap height off the glyph glow rather than the ink and came out too tall,
-   which collapsed that gap and made the three lines overlap in the browser.
+   The flyer's own value is ~0.76: measured off the 1080x1440 artwork, the three
+   lines run cap heights of ~155px with baseline steps of ~165px (against
+   Helvetica Neue's 0.714em cap that is 1.065 * 0.714 = 0.76) -- solid, tight
+   leading with only a hairline between lines. The earlier 0.72 mismeasured the
+   cap height off the glyph glow and made the lines overlap in the browser.
+
+   0.84 is Paul's call 2026-08-31: open it past the poster's own leading so the
+   three lines read as distinctly separate on the page rather than as one tight
+   block. Not a strict poster match by design.
 
    This was 0.88 while the copy read "SEP 12TH, 2026": the comma descends 0.16em
    below the baseline and collided with the caps beneath. The comma was removed
-   2026-08-29, leaving the block with no descenders at all, so the poster's own
-   value is now both correct and safe. If a comma or any lower-case descender
-   returns to this block, put this back to 0.88 or the glyphs will collide. */
+   2026-08-29, leaving the block with no descenders at all. If a comma or any
+   lower-case descender ever returns to this block, keep this at 0.88 or higher
+   or the glyphs will collide. */
 .details {
   font-family: var(--tr-font-display);
   font-weight: var(--tr-weight-bold);
   font-size: clamp(1.75rem, 8vw, 2.75rem);
-  line-height: 0.76;
+  line-height: 0.84;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--tr-red);
