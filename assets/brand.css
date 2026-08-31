@@ -756,9 +756,13 @@ p { margin: 0 0 var(--tr-space-4); }
 
 /* Event details, set exactly as the poster sets them.
 
-   0.72 is measured off the artwork: cap heights 163px with baseline steps of
-   162 and 164px, which against Helvetica Neue's measured 0.71em cap height is
-   line-height 0.72 -- solid leading, caps touching.
+   0.76 is measured off the artwork: on the 1080x1440 flyer the three lines run
+   cap heights of ~155px with baseline steps of ~165px, so the baseline step is
+   about 6% larger than the cap height -- solid, tight leading with a hairline
+   of air between lines, not caps touching. Against Helvetica Neue's 0.714em cap
+   height that is line-height 1.065 * 0.714 = 0.76. The earlier 0.72 measured
+   the cap height off the glyph glow rather than the ink and came out too tall,
+   which collapsed that gap and made the three lines overlap in the browser.
 
    This was 0.88 while the copy read "SEP 12TH, 2026": the comma descends 0.16em
    below the baseline and collided with the caps beneath. The comma was removed
@@ -769,7 +773,7 @@ p { margin: 0 0 var(--tr-space-4); }
   font-family: var(--tr-font-display);
   font-weight: var(--tr-weight-bold);
   font-size: clamp(1.75rem, 8vw, 2.75rem);
-  line-height: 0.72;
+  line-height: 0.76;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--tr-red);
