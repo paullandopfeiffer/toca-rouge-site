@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The semester opening party — Toca Rouge</title>
-<meta name="description" content="The semester opening party. Toca Rouge at Boris, Barcelona, Sat 12 September. House music all night. Get on the guest list or join the Community.">
+<title>UIC opening party — Toca Rouge</title>
+<meta name="description" content="UIC opening party. Toca Rouge at Boris, Barcelona, Sat 12 September. House music all night. Get on the guest list or join the Community.">
 <link rel="canonical" href="https://tocarougebarcelona.com/uic.html">
 <meta name="theme-color" content="#0b0b0c">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Toca Rouge">
 <meta property="og:url" content="https://tocarougebarcelona.com/uic.html">
-<meta property="og:title" content="The semester opening party — Toca Rouge">
-<meta property="og:description" content="The semester opening party. Toca Rouge at Boris, Barcelona, Sat 12 September. House music all night. Get on the guest list or join the Community.">
+<meta property="og:title" content="UIC opening party — Toca Rouge">
+<meta property="og:description" content="UIC opening party. Toca Rouge at Boris, Barcelona, Sat 12 September. House music all night. Get on the guest list or join the Community.">
 <meta property="og:image" content="https://tocarougebarcelona.com/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -22,15 +22,15 @@
 </head>
 <body class="page-qr tr-bg tr-bloom">
   <main class="wrap">
-    <!-- Two arrival paths land on this page, so the opening is swapped at
-         runtime by the script at the foot of the document. What is written
-         here is the WhatsApp-group version, because it is the safe thing to
-         show if the script never runs. The campus-sticker reveal is restored
-         by the script when the src code says the visitor scanned one. Kept
-         deliberately parallel to esade.html; change the two together. -->
+    <!-- Both arrival paths (the two UIC WhatsApp group links and the campus
+         sticker QR) see the same opening as of 2026-08-31, Paul's call:
+         "UIC OPENING PARTY" for both. The runtime intro-swap that used to
+         show a sticker reveal to QR traffic is gone. This is where uic.html
+         and esade.html stop being parallel -- esade.html still swaps in its
+         "no Pilates class" reveal for QR scans. -->
     <div id="intro">
       <p class="eyebrow">UIC</p>
-      <h1>The semester opening party.</h1>
+      <h1>UIC OPENING PARTY</h1>
       <p class="reveal">Saturday 12 September at Boris.</p>
       <p class="reveal-sub">House music all night, and a much bigger list this time.</p>
     </div>
@@ -79,23 +79,6 @@
       var link = document.getElementById('guestlist-link');
       if (src && link) {
         link.href = '/signup.html?src=' + encodeURIComponent(src);
-      }
-
-      // The end-of-summer reveal is the payoff to a campus sticker and only
-      // makes sense to someone who scanned one. Since 2026-08-30 the two UIC
-      // WhatsApp groups link here too, and to them the joke is a non-sequitur.
-      // So the markup above carries the semester-opening-party framing that
-      // matches the message, and the sticker reveal is put back for QR
-      // traffic only. Same mechanism as esade.html -- `qr` is matched as a
-      // whole underscore-delimited token, so `qr_uic` and a future
-      // per-placement `ev1_qr_uic_a` both hit and `ev1_wa_uic_arch5` does not.
-      var intro = document.getElementById('intro');
-      if (intro && /(^|_)qr(_|$)/.test(src)) {
-        intro.innerHTML =
-          '<p class="eyebrow">UIC</p>' +
-          '<h1>There is <span class="no">no</span> end of summer party.</h1>' +
-          '<p class="reveal">We made that bit up. You scanned it anyway, so it worked.</p>' +
-          '<p class="reveal-sub">Here is the real invitation, UIC.</p>';
       }
     })();
   </script>
