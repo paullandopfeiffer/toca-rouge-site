@@ -689,6 +689,31 @@ input:focus-visible,
    only offset. esade.html keeps the centred treatment. */
 .page-qr.qr-top { justify-content: flex-start; }
 
+/* Type pass for the trimmed uic.html intro, so the three "loud" lines read as
+   one system rather than three unrelated sizes. Scoped to .qr-top so
+   esade.html is untouched.
+   - h1 becomes the largest element and takes .details' letter-spacing, so the
+     heading and the date block below it are the same family.
+   - the intro line moves to --tr-text-xl (20px), matching the button labels,
+     so the page has one fewer distinct size.
+   Resulting scale: h1 > .details > (.reveal = .cta) > (.venue = .cta-note) > footer. */
+.qr-top #intro h1 {
+  font-size: clamp(2rem, 9vw, 3rem);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--tr-space-3);
+}
+.qr-top #intro .reveal {
+  font-size: var(--tr-text-xl);
+  margin-bottom: 0;
+}
+
+/* One vertical rhythm: ~32px between each block (intro / panel / actions /
+   footer), tight spacing kept only within a block. Without this the default
+   space-7 gaps left big voids once the page was top-anchored. */
+.qr-top #intro  { margin-bottom: var(--tr-space-6); }
+.qr-top .party  { margin-bottom: var(--tr-space-6); }
+.qr-top footer  { margin-top: var(--tr-space-6); }
+
 /* Flat ground where the texture would fight the content */
 .page-signup,
 .page-privacy,
