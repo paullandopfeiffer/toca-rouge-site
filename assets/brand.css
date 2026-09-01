@@ -683,6 +683,12 @@ input:focus-visible,
   justify-content: center;
 }
 
+/* uic.html carries less copy than esade.html (no eyebrow, one intro line, no
+   QR reveal), so vertical centring leaves a large gap above the heading.
+   Anchor it near the top instead — the .wrap's own space-7 top padding is the
+   only offset. esade.html keeps the centred treatment. */
+.page-qr.qr-top { justify-content: flex-start; }
+
 /* Flat ground where the texture would fight the content */
 .page-signup,
 .page-privacy,
