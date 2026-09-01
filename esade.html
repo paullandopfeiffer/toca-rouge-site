@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The ESADE Masters welcome party — Toca Rouge</title>
-<meta name="description" content="The ESADE Masters welcome party. Toca Rouge at Boris, Barcelona, Sat 12 September, the weekend before welcome week. Get on the guest list or join the Community.">
+<meta name="description" content="The ESADE Masters welcome party. Toca Rouge at Boris, Barcelona, Sat 12 September, the weekend before welcome week. Limited guestlist — get on the list, or join the WhatsApp Community.">
 <link rel="canonical" href="https://tocarougebarcelona.com/esade.html">
 <meta name="theme-color" content="#0b0b0c">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Toca Rouge">
 <meta property="og:url" content="https://tocarougebarcelona.com/esade.html">
 <meta property="og:title" content="The ESADE Masters welcome party — Toca Rouge">
-<meta property="og:description" content="The ESADE Masters welcome party. Toca Rouge at Boris, Barcelona, Sat 12 September, the weekend before welcome week. Get on the guest list or join the Community.">
+<meta property="og:description" content="The ESADE Masters welcome party. Toca Rouge at Boris, Barcelona, Sat 12 September, the weekend before welcome week. Limited guestlist — get on the list, or join the WhatsApp Community.">
 <meta property="og:image" content="https://tocarougebarcelona.com/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,19 +20,16 @@
 <link rel="icon" href="/assets/favicon.svg">
 <link rel="stylesheet" href="/assets/brand.css">
 </head>
-<body class="page-qr tr-bg tr-bloom">
+<body class="page-qr qr-top tr-bg tr-bloom">
   <main class="wrap">
-    <!-- Two arrival paths land on this page, so the opening is swapped at
-         runtime by the script at the foot of the document. What is written
-         here is the WhatsApp-group version, because that is the larger and
-         more time-critical audience and because it is the safe thing to show
-         if the script never runs. The campus-sticker reveal is restored by
-         the script when the src code says the visitor scanned one. -->
+    <!-- One opening for every arrival path (the nine ESADE WhatsApp group links
+         and the campus sticker QR): "ESADE MASTERS WELCOME PARTY", matching the
+         group-message wording. No runtime intro-swap. Same shape as uic.html
+         (the Pilates decoy was dropped 2026-09-01) -- this page differs only by
+         the VIP-tables CTA below the guestlist one. -->
     <div id="intro">
-      <p class="eyebrow">ESADE</p>
-      <h1>The ESADE Masters welcome party.</h1>
-      <p class="reveal">Saturday 12 September at Boris, the weekend before welcome week.</p>
-      <p class="reveal-sub">Come and meet the programme before term starts.</p>
+      <h1>ESADE MASTERS WELCOME PARTY</h1>
+      <p class="reveal">Limited guestlist, sign up below.</p>
     </div>
 
     <section class="party" aria-labelledby="party-name">
@@ -49,6 +46,15 @@
         Get on the list
       </a>
       <p class="cta-note">Takes about thirty seconds.</p>
+
+      <!-- VIP tables go straight to Paul's private WhatsApp, not the funnel:
+           tables are booked in conversation, not through the signup form. -->
+      <a class="cta secondary"
+         href="https://wa.me/4917673569052?text=Hi%2C%20I%27d%20like%20to%20book%20a%20VIP%20table%20for%20Toca%20Rouge%20on%2012%20September."
+         target="_blank" rel="noopener noreferrer">
+        VIP Tables<span class="visually-hidden"> (opens WhatsApp in a new tab)</span>
+      </a>
+      <p class="cta-note">Message us to book — seats five, includes entry.</p>
 
       <a class="cta secondary"
          href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
@@ -67,7 +73,7 @@
     (function () {
       // Per-placement attribution. The default in the href above is the
       // school-level code; if a sticker's QR carries its own ?src= (one code
-      // per corkboard, so placements can be compared) that value wins and is
+      // per placement, so placements can be compared) that value wins and is
       // forwarded to the form instead.
       //
       // Sanitised exactly as signup.html does it: trimmed and length-capped,
@@ -79,27 +85,6 @@
       var link = document.getElementById('guestlist-link');
       if (src && link) {
         link.href = '/signup.html?src=' + encodeURIComponent(src);
-      }
-
-      // The Pilates reveal is the payoff to a campus sticker, and it only
-      // makes sense to someone who scanned one. Since 2026-08-30 the nine
-      // ESADE WhatsApp groups link here too, and to them the joke is a
-      // non-sequitur -- they were never shown a fake Pilates class. So the
-      // markup above carries the welcome-party opening and the sticker
-      // reveal is put back only for QR traffic.
-      //
-      // Placement codes are `qr_esade` today and `ev1_qr_esade_a` once the
-      // stickers carry their own, so `qr` is matched as a whole underscore-
-      // delimited token rather than as a prefix. WhatsApp codes
-      // (`ev1_wa_esade_general`) never match.
-      var intro = document.getElementById('intro');
-      if (intro && /(^|_)qr(_|$)/.test(src)) {
-        intro.innerHTML =
-          '<p class="eyebrow">ESADE</p>' +
-          '<h1>There is <span class="no">no</span> Pilates class.</h1>' +
-          '<p class="reveal">We made that bit up. You scanned it anyway, so it worked.</p>' +
-          '<p class="reveal-sub">Here is the real invitation, ESADE. ' +
-          'The ESADE Masters welcome party, the weekend before welcome week.</p>';
       }
     })();
   </script>
