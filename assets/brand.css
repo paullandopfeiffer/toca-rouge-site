@@ -914,6 +914,21 @@ p { margin: 0 0 var(--tr-space-4); }
 }
 .cta.secondary:hover { background-color: var(--tr-panel); color: var(--tr-fg); }
 
+/* VIP tables (esade.html only): a filled deep-red tier. It outweighs the ghost
+   secondary without becoming a second bright-red primary — the shade reads as
+   "the premium one". White on #7C1314 is ~9:1, well clear of AA. Hover brightens
+   toward --tr-red, inverting the primary's darken-on-hover. */
+.cta.vip {
+  background-color: var(--tr-red-deep);
+  color: #fff;
+  border-color: transparent;
+}
+.cta.vip:hover {
+  background-color: var(--tr-red);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 .page-qr .cta {
   display: block;
   /* Full-width already, so the generous horizontal padding only steals room
