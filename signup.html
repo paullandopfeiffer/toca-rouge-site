@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Get a ticket — Toca Rouge</title>
-<meta name="description" content="Toca Rouge. House music. 12 September, Boris. Last tickets.">
+<title>Join the list — Toca Rouge</title>
+<meta name="description" content="Toca Rouge. House music, Barcelona. Be first to know about the next drop.">
 <link rel="canonical" href="https://tocarougebarcelona.com/signup.html">
 <meta name="theme-color" content="#0b0b0c">
 <!-- Ambassador links point straight at this page (tocarougebarcelona.com/signup.html?src=…),
@@ -12,8 +12,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Toca Rouge">
 <meta property="og:url" content="https://tocarougebarcelona.com/signup.html">
-<meta property="og:title" content="Get a ticket — Toca Rouge">
-<meta property="og:description" content="Toca Rouge. House music. 12 September, Boris. Last tickets.">
+<meta property="og:title" content="Join the list — Toca Rouge">
+<meta property="og:description" content="Toca Rouge. House music, Barcelona. Be first to know about the next drop.">
 <meta property="og:image" content="https://tocarougebarcelona.com/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -29,8 +29,8 @@
       <img class="brand-mini" src="/assets/logo/tocarouge-wordmark-red.svg"
            alt="Toca Rouge" width="388" height="56">
     </a>
-    <h1>Almost there</h1>
-    <p class="subhead">Fill this in and we'll take you straight to your ticket.</p>
+    <h1>Don't miss the next drop</h1>
+    <p class="subhead">Join the list and be the first to know.</p>
     <form id="signup-form" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLScM_ItIO17QPNIq5TFSShtKXKvBZAc43XQ4Zhh5KTzV0Czc0g/formResponse">
       <div>
         <label for="first-name">First name</label>
@@ -66,17 +66,13 @@
       <p class="privacy-note">
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
-      <button type="submit" class="submit" id="submit-btn">Get a ticket</button>
-      <p class="error" id="error-msg" role="alert">That's taking longer than expected. Your details may already be saved &mdash; try once more, or use the link below.</p>
+      <button type="submit" class="submit" id="submit-btn">Join the list</button>
+      <p class="error" id="error-msg" role="alert">That's taking longer than expected. Your details may already be saved &mdash; try once more.</p>
     </form>
+    <p class="note" id="success-msg" hidden>You're on the list. We'll be in touch before the next drop.</p>
     <p class="note">
       Want the WhatsApp Community too? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
          target="_blank" rel="noopener noreferrer">Join here →<span class="visually-hidden"> (opens in a new tab)</span></a>
-    </p>
-    <p class="note">
-      Not working? <a id="ticket-fallback" href="https://www.fourvenues.com/paul-pfeiffer/events/1209-toca-rouge-12-09-2026-39GG"
-         rel="noreferrer">Skip and go straight to your ticket →</a>
-      <br><span style="opacity:.65">This skips the free list — only use it if the form above won't submit.</span>
     </p>
     <footer>
       <a href="/privacy.html">Privacy</a> ·
@@ -106,20 +102,10 @@
         if (back) back.href = '/?src=' + encodeURIComponent(src);
       }
 
-      // The ticket URL now has ONE home on this page: the visible fallback link
-      // below. It used to be written twice — there and here — with nothing
-      // keeping the two in step, so the redirect could silently point somewhere
-      // the visible link did not. Reading it from the anchor makes that
-      // impossible, and leaves the URL working with JavaScript switched off.
-      // Null-safe on purpose: this runs BEFORE form.target is set below, so a
-      // throw here would abort the whole IIFE and silently turn the submission
-      // into a top-level post with no ticket redirect.
-      var ticketFallback = document.getElementById('ticket-fallback');
-      var BORIS_LINK = ticketFallback ? ticketFallback.href : '';
-
       var form = document.getElementById('signup-form');
       var btn = document.getElementById('submit-btn');
       var errorMsg = document.getElementById('error-msg');
+      var successMsg = document.getElementById('success-msg');
       var sink = document.getElementById('gform-sink');
       var honeypot = document.getElementById('company');
 
@@ -128,16 +114,18 @@
       //
       //  1. A no-cors fetch returns an opaque response — status 0, ok false —
       //     whether Google accepted the submission or threw it away. The page
-      //     could never tell, so a blocked request still redirected the user
-      //     to the ticket page as though they were on the list.
+      //     could never tell, so a blocked request still showed success
+      //     as though the signup had gone through.
       //  2. Content blockers and tracking protection kill cross-origin fetch
       //     far more readily than they block a form POST into an iframe.
       //  3. The iframe's load event is a REAL signal that Google answered.
       //
       // The target is set here rather than in the HTML on purpose: with JS
       // unavailable the form posts top-level instead, and Google's own
-      // confirmation page — which carries the WhatsApp and ticket links —
-      // is what the visitor sees. Degraded, but the signup is still captured.
+      // confirmation page is what the visitor sees. Degraded, but the
+      // signup is still captured. NOTE: that Google Form confirmation
+      // message may still reference the old ticket/WhatsApp copy — it lives
+      // in the Form's own settings, not in this file, and wasn't checked here.
       form.target = 'gform-sink';
 
       var submitted = false;
@@ -145,12 +133,9 @@
 
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
-        // If the fallback anchor is missing there is nowhere to send anyone, so
-        // leave the timer running: at 12s the button re-enables and the neutral
-        // message appears, rather than the visitor sitting on a dead button.
-        if (!BORIS_LINK) return;
         clearTimeout(timer);
-        window.location.href = BORIS_LINK;
+        form.hidden = true;
+        successMsg.hidden = false;
       });
 
       // No preventDefault: the browser performs the POST itself. This handler
@@ -171,7 +156,7 @@
         // so the copy must not claim it failed.
         timer = setTimeout(function () {
           btn.disabled = false;
-          btn.textContent = 'Get a ticket';
+          btn.textContent = 'Join the list';
           errorMsg.classList.add('show');
           submitted = false;
         }, 12000);
