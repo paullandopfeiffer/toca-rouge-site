@@ -255,7 +255,7 @@ Everything in this section is load-bearing funnel logic. **None of it is styling
 
 ### `signup.html` — the form element
 
-- `action="https://docs.google.com/forms/d/e/1FAIpQLScM_.../formResponse"`, `method="POST"`
+- the `action` attribute and `method="POST"`. The form endpoint's single source of truth is `signup.html` itself, so this file deliberately no longer repeats it (it pointed at the retired info@ form until 2026-09-16)
 - Every `entry.*` field name, exactly as written:
   - `entry.1637221435` first name · `entry.205280153` email · `entry.1450901064` phone
   - `entry.1932387565` hidden `src` attribution
