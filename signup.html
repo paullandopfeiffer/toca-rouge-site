@@ -67,7 +67,7 @@
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
       <button type="submit" class="submit" id="submit-btn">Join the list</button>
-      <p class="error" id="error-msg" role="alert">That's taking longer than expected. Your details may already be saved &mdash; try once more.</p>
+      <p class="error" id="error-msg" role="alert">Your details are most likely saved. Please don't submit again, we'll be in touch before the next party.</p>
     </form>
     <p class="note" id="success-msg" hidden>You're on the list. We'll be in touch before the next party.</p>
     <p class="note">
@@ -151,15 +151,26 @@
         btn.disabled = true;
         btn.textContent = 'Submitting…';
 
-        // If Google has not answered in 12s, give the visitor something to do
-        // rather than a dead button. Their submission may well have landed,
-        // so the copy must not claim it failed.
+        // If Google has not answered in 6s, give the visitor something to do
+        // rather than a dead button.
+        //
+        // Shortened from 12s and the copy softened on 2026-09-16. The form
+        // moved to the admin@ copy that day; submissions kept reaching the
+        // sheet, but Paul's browser never showed the confirmation, because
+        // the iframe's load event never fired there. It fired normally in a
+        // clean browser on the same page, so the cause was never identified —
+        // this fallback is simply the path a blocking browser actually takes,
+        // and 12s of dead button is too long to sit on it.
+        //
+        // The copy still must not claim success: a content blocker can kill
+        // the POST outright, and the page cannot tell. It must also not ask
+        // for a second submission, which is how one visitor becomes two rows.
         timer = setTimeout(function () {
           btn.disabled = false;
           btn.textContent = 'Join the list';
           errorMsg.classList.add('show');
           submitted = false;
-        }, 12000);
+        }, 6000);
       });
     })();
   </script>
