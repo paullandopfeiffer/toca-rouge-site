@@ -92,7 +92,9 @@
       // rewrite or reject anything: an unrecognised code must still reach the
       // sheet unaltered, where it can be seen and explained. Trimming only
       // repairs whitespace picked up when a link is pasted through a chat app,
-      // which cannot be part of a legitimate code.
+      // which cannot be part of a legitimate code. The one exception is
+      // escapeFormula() below, applied at submit time alongside the name and
+      // phone fields — a security guard, not a rewrite of the code itself.
       var params = new URLSearchParams(window.location.search);
       var src = (params.get('src') || '').trim().slice(0, 64);
       if (src) document.getElementById('src').value = src;
@@ -111,6 +113,30 @@
       var honeypot = document.getElementById('hp-field');
       var heading = document.getElementById('signup-heading');
       var subhead = document.getElementById('signup-subhead');
+      var firstName = document.getElementById('first-name');
+      var phone = document.getElementById('phone');
+      var srcField = document.getElementById('src');
+
+      // First name, phone and the src code all land as free text in the
+      // linked Sheet. A value starting with =, +, -, @, tab or CR is the
+      // standard CSV/formula-injection trigger (OWASP): Sheets, Excel and
+      // LibreOffice all read a leading one of those as "this cell is a
+      // formula," so "=IMPORTXML(...)" typed as a first name becomes a
+      // live formula the moment anyone opens the sheet or its CSV export —
+      // and this vault's own workflow opens that export routinely. Found
+      // 2026-09-23. The standard fix is the same age as the vulnerability:
+      // a leading apostrophe forces text, in Sheets and in any spreadsheet
+      // app that later opens the CSV.
+      // Phone gets its own pattern, minus "+": a leading "+" is how every
+      // international number is written ("+34 6..."), not a formula trigger
+      // here, and guarding it too would prepend a stray apostrophe onto a
+      // number someone at the door needs to read correctly.
+      function escapeFormula(v) {
+        return /^[=+\-@\t\r]/.test(v) ? "'" + v : v;
+      }
+      function escapePhoneFormula(v) {
+        return /^[=\-@\t\r]/.test(v) ? "'" + v : v;
+      }
 
       // Submission is a NATIVE form POST aimed at a hidden iframe, not a
       // fetch. Three reasons, all learned the hard way on 2026-08-20:
@@ -158,6 +184,14 @@
         // browser perform the POST itself, which is the whole point of the design.
         if (honeypot && honeypot.value !== '') { e.preventDefault(); return; }
         if (submitted) return;
+
+        // Mutating .value here changes what the browser actually sends: the
+        // POST is built from field values as they stand once every submit
+        // listener has run, not from what they were when typed.
+        firstName.value = escapeFormula(firstName.value);
+        phone.value = escapePhoneFormula(phone.value);
+        srcField.value = escapeFormula(srcField.value);
+
         submitted = true;
         errorMsg.classList.remove('show');
         btn.disabled = true;
