@@ -62,10 +62,33 @@
         <label for="hp-field">Leave blank</label>
         <input type="text" id="hp-field" name="hp_text_field" tabindex="-1" autocomplete="off">
       </div>
+      <!-- Marketing permission is OPT-OUT since 2026-09-23 (Paul) — the lawful
+           basis is the ePrivacy soft opt-in, Art. 13(2) of Directive 2002/58 via
+           LSSI Art. 21.2 and UWG §7(3), not GDPR consent. So the ask is an
+           objection, not a permission. CJEU C-654/23 (Inteligo Media,
+           13 Nov 2025) is what makes it reach a free signup: a free
+           registration is a "sale of a service" where it is indirectly
+           remunerated by the paid offering it promotes.
+
+           THE VISIBLE BOX DELIBERATELY CARRIES NO entry.* NAME. The Google
+           Form question entry.956517138 stores the literal option text
+           "Yes, keep me posted", and AUDIENCE.marketing_consent treats a value
+           there as "mailable". Naming the visible box would send that value
+           for the people who OBJECTED and silently invert the column. The
+           hidden field below is filled at submit time only when the box is
+           UNCHECKED. No Google Form question was touched, which also avoids
+           the entry-ID drift hazard.
+
+           The objection must be "clear and distinct" and free of charge —
+           that is a condition of the basis, not a nicety. Both lines sit at
+           full contrast for exactly that reason. Shrinking, greying or
+           burying either one forfeits the basis it exists to satisfy. -->
+      <p class="consent-lead">We'll email you when the next Toca Rouge date drops. Unsubscribe any time.</p>
       <label class="consent">
-        <input type="checkbox" id="consent" name="entry.956517138" value="Yes, keep me posted">
-        Get the next Toca Rouge date before it goes public — by email or WhatsApp.
+        <input type="checkbox" id="optout">
+        Don't email me about future events
       </label>
+      <input type="hidden" id="marketing" name="entry.956517138" value="">
       <p class="privacy-note">
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
@@ -116,6 +139,8 @@
       var firstName = document.getElementById('first-name');
       var phone = document.getElementById('phone');
       var srcField = document.getElementById('src');
+      var optout = document.getElementById('optout');
+      var marketing = document.getElementById('marketing');
 
       // First name, phone and the src code all land as free text in the
       // linked Sheet. A value starting with =, +, -, @, tab or CR is the
@@ -191,6 +216,17 @@
         firstName.value = escapeFormula(firstName.value);
         phone.value = escapePhoneFormula(phone.value);
         srcField.value = escapeFormula(srcField.value);
+
+        // Opt-out inverted here rather than in the markup, so the sheet keeps
+        // its existing meaning: a value in this column means "we may email
+        // this person". Ticking the visible box sends nothing at all.
+        //
+        // Note which way this fails. With JS unavailable the form posts
+        // top-level and this line never runs, so the field stays empty and
+        // the row lands NOT marked mailable. That is the right direction to
+        // fail for a field carrying a legal permission — a lost signup is
+        // recoverable, a person wrongly marked reachable is not.
+        marketing.value = optout.checked ? '' : 'Yes, keep me posted';
 
         submitted = true;
         errorMsg.classList.remove('show');

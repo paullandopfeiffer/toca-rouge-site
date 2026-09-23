@@ -1047,12 +1047,24 @@ footer a:hover { color: var(--tr-fg); }
 /* The honeypot must keep its own positioning — it is anti-spam, not layout. */
 .hp { position: absolute; left: -9999px; width: 0; height: 0; overflow: hidden; }
 
+/* Marketing permission is opt-out since 2026-09-23. Art. 13(2) of the ePrivacy
+   Directive requires the chance to object to be given "clearly and distinctly"
+   and free of charge, so both the statement and the objection sit at --tr-fg
+   rather than --tr-muted. This is a legal condition wearing a style rule:
+   muting either line back down would forfeit the basis they exist to satisfy.
+   See Decisions/Marketing Consent Moves to Opt-Out. */
+.consent-lead {
+  font-size: var(--tr-text-sm);
+  color: var(--tr-fg);
+  line-height: 1.45;
+  margin: 0;
+}
 .consent {
   display: flex;
   align-items: flex-start;
   gap: var(--tr-space-3);
   font-size: var(--tr-text-sm);
-  color: var(--tr-muted);
+  color: var(--tr-fg);
   line-height: 1.45;
   margin: 0;
 }
