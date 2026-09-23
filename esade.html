@@ -3,67 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The ESADE Masters welcome party — Toca Rouge</title>
-<meta name="description" content="The ESADE Masters welcome party. Toca Rouge at Boris, Barcelona, Sat 12 September, the weekend before welcome week. Last tickets — grab one, or join the WhatsApp Community.">
-<link rel="canonical" href="https://tocarougebarcelona.com/esade.html">
+<title>Toca Rouge — Barcelona</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://tocarougebarcelona.com/">
 <meta name="theme-color" content="#0b0b0c">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Toca Rouge">
-<meta property="og:url" content="https://tocarougebarcelona.com/esade.html">
-<meta property="og:title" content="The ESADE Masters welcome party — Toca Rouge">
-<meta property="og:description" content="The ESADE Masters welcome party. Toca Rouge at Boris, Barcelona, Sat 12 September, the weekend before welcome week. Last tickets — grab one, or join the WhatsApp Community.">
-<meta property="og:image" content="https://tocarougebarcelona.com/assets/og.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Toca Rouge">
-<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg">
 <link rel="stylesheet" href="/assets/brand.css">
 </head>
-<body class="page-qr qr-top tr-bg tr-bloom">
+<body class="page-404 tr-bg tr-bloom">
+  <!-- Retired 2026-09-23, Paul: the ESADE campus stickers are still up but this
+       page advertised the 12 September Boris night, which has already happened.
+       Forwards into the evergreen signup page (the one linked in the Instagram
+       bio) instead, keeping the qr_esade attribution code so the sticker still
+       counts in CAMPAIGNS. -->
   <main class="wrap">
-    <!-- One opening for every arrival path (the nine ESADE WhatsApp group links
-         and the campus sticker QR): "ESADE MASTERS WELCOME PARTY", matching the
-         group-message wording. No runtime intro-swap. Same shape as uic.html
-         (the Pilates decoy was dropped 2026-09-01) -- this page differs only by
-         the VIP-tables CTA below the guestlist one. -->
-    <div id="intro">
-      <h1>ESADE MASTERS WELCOME PARTY</h1>
-      <p class="reveal">Last tickets, grab one below.</p>
-    </div>
-
-    <section class="party" aria-labelledby="party-name">
-      <h2 class="wordmark" id="party-name">
-        <img src="/assets/logo/tocarouge-logo-red.svg" alt="Toca Rouge"
-             width="268" height="105">
-      </h2>
-      <p class="details">Sep 12th 2026<br>Till 6 AM<br>Barcelona</p>
-      <p class="venue">At Boris Club</p>
-    </section>
-
-    <div class="actions">
-      <a class="cta primary" id="guestlist-link" href="/signup.html?src=qr_esade">
-        Get a ticket
-      </a>
-      <p class="cta-note">Takes about thirty seconds.</p>
-
-      <!-- VIP tables go straight to Paul's private WhatsApp, not the funnel:
-           tables are booked in conversation, not through the signup form. -->
-      <a class="cta vip"
-         href="https://wa.me/4917673569052?text=Hi%2C%20I%27d%20like%20to%20book%20a%20VIP%20table%20for%20Toca%20Rouge%20on%2012%20September."
-         target="_blank" rel="noopener noreferrer">
-        VIP Tables<span class="visually-hidden"> (opens WhatsApp in a new tab)</span>
-      </a>
-      <p class="cta-note">Message us to book — seats five, includes entry.</p>
-
-      <a class="cta secondary"
-         href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
-         target="_blank" rel="noopener noreferrer">
-        Join the WhatsApp Community<span class="visually-hidden"> (opens in a new tab)</span>
-      </a>
-      <p class="cta-note">Lineup, updates, and everyone else who is going.</p>
-    </div>
-
+    <h1>That party's happened</h1>
+    <p class="subhead">But there's another one coming.</p>
+    <a class="cta" href="/?src=qr_esade" id="home-link">Get on the list</a>
     <footer>
       <a href="/privacy.html">Privacy</a> &middot;
       <a href="/impressum.html">Legal</a>
@@ -71,20 +27,13 @@
   </main>
   <script>
     (function () {
-      // Per-placement attribution. The default in the href above is the
-      // school-level code; if a sticker's QR carries its own ?src= (one code
-      // per placement, so placements can be compared) that value wins and is
-      // forwarded to the form instead.
-      //
-      // Sanitised exactly as signup.html does it: trimmed and length-capped,
-      // and nothing else. No lowercasing, no filtering, no rejection, because
-      // codes are matched exactly against their source of truth and an
-      // unrecognised one must still reach the sheet intact.
-      var src = (new URLSearchParams(window.location.search).get('src') || '')
-                  .trim().slice(0, 64);
-      var link = document.getElementById('guestlist-link');
-      if (src && link) {
-        link.href = '/signup.html?src=' + encodeURIComponent(src);
+      // Per-placement override, same as the retired page used to do: a sticker
+      // whose own QR carries its own ?src= keeps that code instead of the
+      // school-level default above.
+      var src = (new URLSearchParams(window.location.search).get('src') || '').trim().slice(0, 64);
+      var home = document.getElementById('home-link');
+      if (src && home) {
+        home.href = '/?src=' + encodeURIComponent(src);
       }
     })();
   </script>
