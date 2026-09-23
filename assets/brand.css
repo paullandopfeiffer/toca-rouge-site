@@ -1064,18 +1064,6 @@ footer a:hover { color: var(--tr-fg); }
   accent-color: var(--tr-red);
 }
 
-.dress {
-  background-color: var(--tr-panel);
-  border: 1px solid var(--tr-border);
-  border-radius: var(--tr-radius-box);
-  padding: var(--tr-space-4);
-  font-size: var(--tr-text-sm);
-  line-height: 1.5;
-  color: var(--tr-fg);
-  margin: 0;
-}
-.dress strong { color: var(--tr-red-text); }
-
 .privacy-note { font-size: var(--tr-text-xs); color: var(--tr-muted); line-height: 1.5; margin: 0; }
 .privacy-note a { color: var(--tr-red-text); }
 

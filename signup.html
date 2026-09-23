@@ -51,18 +51,21 @@
       <!-- Honeypot. Deliberately NOT an entry.* name, so Google Forms discards it
            even if it is ever submitted. Off-screen and out of the tab order, so a
            real visitor cannot fill it; a bot that fills every input will, and the
-           submit handler drops that submission before it reaches Google. -->
+           submit handler drops that submission before it reaches Google.
+           Field name/id/label deliberately avoid "company" and other recognized
+           address-autofill vocabulary — found 2026-09-23, that name is exactly
+           what Chrome autofill and password-manager extensions (which ignore
+           autocomplete="off" and don't check on-screen position) match on. When
+           they fill it, the submit handler preventDefault()s with no visible
+           feedback at all: to the visitor, the button does nothing. -->
       <div class="hp" aria-hidden="true">
-        <label for="company">Company</label>
-        <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+        <label for="hp-field">Leave blank</label>
+        <input type="text" id="hp-field" name="hp_text_field" tabindex="-1" autocomplete="off">
       </div>
       <label class="consent">
         <input type="checkbox" id="consent" name="entry.956517138" value="Yes, keep me posted">
         Get the next Toca Rouge date before it goes public — by email or WhatsApp.
       </label>
-      <p class="dress">
-        <strong>Dress code:</strong> dress to impress — come ready to dance!
-      </p>
       <p class="privacy-note">
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
@@ -107,7 +110,7 @@
       var errorMsg = document.getElementById('error-msg');
       var successMsg = document.getElementById('success-msg');
       var sink = document.getElementById('gform-sink');
-      var honeypot = document.getElementById('company');
+      var honeypot = document.getElementById('hp-field');
 
       // Submission is a NATIVE form POST aimed at a hidden iframe, not a
       // fetch. Three reasons, all learned the hard way on 2026-08-20:
@@ -134,7 +137,12 @@
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
         clearTimeout(timer);
-        form.hidden = true;
+        // Not form.hidden: #signup-form { display: flex } in brand.css is an ID
+        // rule and beats the [hidden] UA rule's attribute-selector specificity,
+        // so setting the attribute alone left the form fully visible with the
+        // button stuck on "Submitting…" forever — found 2026-09-23. An inline
+        // style always wins over an external stylesheet, hidden or not.
+        form.style.display = 'none';
         successMsg.hidden = false;
       });
 
