@@ -29,8 +29,8 @@
       <img class="brand-mini" src="/assets/logo/tocarouge-wordmark-red.svg"
            alt="Toca Rouge" width="388" height="56">
     </a>
-    <h1>Don't miss the next party</h1>
-    <p class="subhead">Join the list and be the first to know.</p>
+    <h1 id="signup-heading">Don't miss the next party</h1>
+    <p class="subhead" id="signup-subhead">Join the list and be the first to know.</p>
     <form id="signup-form" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLSffd653yc66nX6rRnEkaeqDe-QRgiSkMtoO40ruGuvVFexy-A/formResponse">
       <div>
         <label for="first-name">First name</label>
@@ -72,7 +72,7 @@
       <button type="submit" class="submit" id="submit-btn">Join the list</button>
       <p class="error" id="error-msg" role="alert">Your details are most likely saved. Please don't submit again, we'll be in touch before the next party.</p>
     </form>
-    <p class="note" id="success-msg" hidden>You're on the list. We'll be in touch before the next party.</p>
+    <p class="note" id="success-msg" hidden>You're on the list. See you soon — we'll let you know as soon as the next one's on.</p>
     <p class="note">
       Want the WhatsApp Community too? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
          target="_blank" rel="noopener noreferrer">Join here →<span class="visually-hidden"> (opens in a new tab)</span></a>
@@ -111,6 +111,8 @@
       var successMsg = document.getElementById('success-msg');
       var sink = document.getElementById('gform-sink');
       var honeypot = document.getElementById('hp-field');
+      var heading = document.getElementById('signup-heading');
+      var subhead = document.getElementById('signup-subhead');
 
       // Submission is a NATIVE form POST aimed at a hidden iframe, not a
       // fetch. Three reasons, all learned the hard way on 2026-08-20:
@@ -143,6 +145,11 @@
         // button stuck on "Submitting…" forever — found 2026-09-23. An inline
         // style always wins over an external stylesheet, hidden or not.
         form.style.display = 'none';
+        // "Don't miss the next party" / "Join the list..." only made sense
+        // as a pitch to sign up — once signed up it's just leftover text
+        // above the confirmation. Paul's call, 2026-09-23.
+        heading.style.display = 'none';
+        subhead.style.display = 'none';
         successMsg.hidden = false;
       });
 
