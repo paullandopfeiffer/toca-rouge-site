@@ -72,10 +72,9 @@
       <button type="submit" class="submit" id="submit-btn">Join the list</button>
       <p class="error" id="error-msg" role="alert">Your details are most likely saved. Please don't submit again, we'll be in touch before the next party.</p>
     </form>
-    <p class="note" id="success-msg" hidden>You're on the list. See you soon — we'll let you know as soon as the next one's on.</p>
     <p class="note">
-      Want the WhatsApp Community too? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
-         target="_blank" rel="noopener noreferrer">Join here →<span class="visually-hidden"> (opens in a new tab)</span></a>
+      Want more than an email? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
+         target="_blank" rel="noopener noreferrer">Join the WhatsApp Community →<span class="visually-hidden"> (opens in a new tab)</span></a>
     </p>
     <footer>
       <a href="/privacy.html">Privacy</a> ·
@@ -108,7 +107,6 @@
       var form = document.getElementById('signup-form');
       var btn = document.getElementById('submit-btn');
       var errorMsg = document.getElementById('error-msg');
-      var successMsg = document.getElementById('success-msg');
       var sink = document.getElementById('gform-sink');
       var honeypot = document.getElementById('hp-field');
       var heading = document.getElementById('signup-heading');
@@ -145,12 +143,11 @@
         // button stuck on "Submitting…" forever — found 2026-09-23. An inline
         // style always wins over an external stylesheet, hidden or not.
         form.style.display = 'none';
-        // "Don't miss the next party" / "Join the list..." only made sense
-        // as a pitch to sign up — once signed up it's just leftover text
-        // above the confirmation. Paul's call, 2026-09-23.
-        heading.style.display = 'none';
-        subhead.style.display = 'none';
-        successMsg.hidden = false;
+        // Reuse the heading/subhead rather than a separate low-key <p> for
+        // the confirmation — Paul wanted it to carry the same weight as the
+        // pitch it replaces, not read as a footnote. 2026-09-23.
+        heading.textContent = "You're on the list";
+        subhead.textContent = "See you soon — we'll let you know as soon as the next one's on.";
       });
 
       // No preventDefault: the browser performs the POST itself. This handler
