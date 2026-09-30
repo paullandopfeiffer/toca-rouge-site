@@ -828,6 +828,11 @@ p { margin: 0 0 var(--tr-space-4); }
   margin: 0 0 var(--tr-space-6);
 }
 
+/* Landing page (Paul, 2026-09-30): the date block, the line under it and the
+   button sit at equal distances, 24px each, instead of 12px then 32px. */
+.page-home .details,
+.page-home .venue { margin-bottom: var(--tr-space-5); }
+
 .eyebrow {
   font-size: var(--tr-text-sm);
   letter-spacing: 0.18em;
