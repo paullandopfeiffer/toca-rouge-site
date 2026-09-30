@@ -119,13 +119,14 @@
   <script>
     (function () {
       // Friday 2 October: where a confirmed signup goes next, per sender. The
-      // tickets sell on Sala Bikini's fourvenues account; each sender has a
+      // tickets sell on Sala Bikini's Xceed channel (default below is the
+      // checkout with the guestlist code already applied); each sender has a
       // promoter link there, so fourvenues counts sales per sender while our
       // sheet keeps the exact group from ?src=. An empty link falls back to
       // 'default'; if that is empty too, the visitor stays on the on-page
       // confirmation. Same redirect pattern the Boris funnel used before 4a30d0f.
       var TICKET_LINKS = {
-        'default': '',
+        'default': 'https://xceed.me/es/barcelona/checkout/promocode/toca-rouge/6a1a66a8-bcfd-11f1-a194-0242ac11001d/promocode/guestlistfandf?channel=bikini-barcelona',
         'max': '',
         'paul': '',
         'hrtngs': ''
