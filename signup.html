@@ -95,6 +95,16 @@
       <button type="submit" class="submit" id="submit-btn">Get on the list</button>
       <p class="error" id="error-msg" role="alert">Your details are most likely saved. Please don't submit again, we'll be in touch before the next party.</p>
     </form>
+    <!-- Friday 2 Oct: the guestlist is claimed on fourvenues with a code, shown
+         only here, after signing up (Paul, 2026-09-30). Toggled with inline
+         style, not [hidden]: .cta sets display and would beat the UA rule. -->
+    <div class="code-box" id="code-box" style="display:none">
+      <p class="eyebrow">Your guestlist code</p>
+      <p class="code-value" id="code-value">guestlistfandf</p>
+      <button type="button" class="cta secondary" id="copy-code">Copy code</button>
+      <p class="code-help">Enter it on the next page to get your free entry, valid until 1:30.</p>
+      <a class="cta" id="claim-link" href="#" style="display:none">Claim your free entry</a>
+    </div>
     <p class="note">
       Want more than an email? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
          target="_blank" rel="noopener noreferrer">Become part of the community<span class="visually-hidden"> (opens WhatsApp in a new tab)</span></a>
@@ -205,11 +215,24 @@
       var submitted = false;
       var timer = null;
 
+      var codeBox = document.getElementById('code-box');
+      var claimLink = document.getElementById('claim-link');
+      var copyBtn = document.getElementById('copy-code');
+      function revealCode() {
+        codeBox.style.display = 'block';
+        var next = ticketLinkFor(src);
+        if (next) { claimLink.href = next; claimLink.style.display = 'inline-block'; }
+      }
+      copyBtn.addEventListener('click', function () {
+        var text = document.getElementById('code-value').textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { copyBtn.textContent = 'Copied'; }, function () {});
+        }
+      });
+
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
         clearTimeout(timer);
-        var next = ticketLinkFor(src);
-        if (next) { window.location.href = next; return; }
         // Not form.hidden: #signup-form { display: flex } in brand.css is an ID
         // rule and beats the [hidden] UA rule's attribute-selector specificity,
         // so setting the attribute alone left the form fully visible with the
@@ -221,6 +244,7 @@
         // pitch it replaces, not read as a footnote. 2026-09-23.
         heading.textContent = "You're on the list";
         subhead.textContent = "Friday 2nd October, Sala Bikini. Free entry until 1:30, doors open at midnight. Come early.";
+        revealCode();
       });
 
       // No preventDefault: the browser performs the POST itself. This handler
@@ -274,6 +298,10 @@
           btn.textContent = 'Get on the list';
           errorMsg.classList.add('show');
           submitted = false;
+          // The submission has most likely landed (see above), and some
+          // browsers never fire the iframe load event, so show the code here
+          // too rather than leave a real signup without a way in.
+          revealCode();
         }, 6000);
       });
     })();

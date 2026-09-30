@@ -947,6 +947,20 @@ p { margin: 0 0 var(--tr-space-4); }
 }
 .actions .cta-note:last-child { margin-bottom: 0; }
 
+/* Signup confirmation, Friday 2 Oct: the guestlist code, claimed on fourvenues.
+   Not uppercased: the code is entered as shown. */
+.code-box   { margin: 0 0 var(--tr-space-6); }
+.code-value {
+  font-family: var(--tr-font-display);
+  font-weight: var(--tr-weight-bold);
+  font-size: clamp(1.5rem, 7vw, 2.25rem);
+  color: var(--tr-red-text);
+  text-transform: none;
+  word-break: break-all;
+  margin: 0 0 var(--tr-space-3);
+}
+.code-help  { color: var(--tr-fg); margin: var(--tr-space-4) 0 var(--tr-space-5); }
+
 /* ---- Landing-page entrance ----------------------------------------------
    A short composed reveal on index.html so the page reads as deliberate
    rather than as one that simply painted. The elements rise into place in
