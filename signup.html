@@ -108,6 +108,12 @@
           style="position:absolute;left:-9999px;width:0;height:0;border:0"></iframe>
   <script>
     (function () {
+      // Friday 2 October: where a confirmed signup goes next. Empty means no
+      // ticket page exists yet, so the visitor stays on the on-page confirmation.
+      // Set it to the fourvenues event URL and the success path redirects there,
+      // the same pattern the Boris funnel used before 4a30d0f.
+      var TICKET_LINK = '';
+
       // Populate the hidden attribution field from ?src=... in the URL.
       //
       // Trimmed and length-capped, and nothing else. Codes are matched EXACTLY
@@ -188,6 +194,7 @@
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
         clearTimeout(timer);
+        if (TICKET_LINK) { window.location.href = TICKET_LINK; return; }
         // Not form.hidden: #signup-form { display: flex } in brand.css is an ID
         // rule and beats the [hidden] UA rule's attribute-selector specificity,
         // so setting the attribute alone left the form fully visible with the
