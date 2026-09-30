@@ -108,11 +108,25 @@
           style="position:absolute;left:-9999px;width:0;height:0;border:0"></iframe>
   <script>
     (function () {
-      // Friday 2 October: where a confirmed signup goes next. Empty means no
-      // ticket page exists yet, so the visitor stays on the on-page confirmation.
-      // Set it to the fourvenues event URL and the success path redirects there,
-      // the same pattern the Boris funnel used before 4a30d0f.
-      var TICKET_LINK = '';
+      // Friday 2 October: where a confirmed signup goes next, per sender. The
+      // tickets sell on Sala Bikini's fourvenues account; each sender has a
+      // promoter link there, so fourvenues counts sales per sender while our
+      // sheet keeps the exact group from ?src=. An empty link falls back to
+      // 'default'; if that is empty too, the visitor stays on the on-page
+      // confirmation. Same redirect pattern the Boris funnel used before 4a30d0f.
+      var TICKET_LINKS = {
+        'default': '',
+        'max': '',
+        'paul': '',
+        'hrtngs': ''
+      };
+      function ticketLinkFor(code) {
+        var key = 'default';
+        if (/^ev3_dj_hrtngs/.test(code)) key = 'hrtngs';
+        else if (/^ev3_(wa_esade_cohort|wa_barcelona_business|dm_max)/.test(code)) key = 'max';
+        else if (/^ev3_(wa_uic|dm_paul)/.test(code)) key = 'paul';
+        return TICKET_LINKS[key] || TICKET_LINKS['default'];
+      }
 
       // Populate the hidden attribution field from ?src=... in the URL.
       //
@@ -194,7 +208,8 @@
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
         clearTimeout(timer);
-        if (TICKET_LINK) { window.location.href = TICKET_LINK; return; }
+        var next = ticketLinkFor(src);
+        if (next) { window.location.href = next; return; }
         // Not form.hidden: #signup-form { display: flex } in brand.css is an ID
         // rule and beats the [hidden] UA rule's attribute-selector specificity,
         // so setting the attribute alone left the form fully visible with the
