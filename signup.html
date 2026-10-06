@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tickets · Toca Rouge, Friday 2nd October</title>
-<meta name="description" content="Toca Rouge. Friday 2nd October, Sala Bikini. Tickets online now.">
+<title>Join the list · Toca Rouge</title>
+<meta name="description" content="Toca Rouge. House music, Barcelona. Be first to know about the next party.">
 <link rel="canonical" href="https://tocarougebarcelona.com/signup.html">
 <meta name="theme-color" content="#0b0b0c">
 <!-- Ambassador links point straight at this page (tocarougebarcelona.com/signup.html?src=…),
@@ -12,8 +12,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Toca Rouge">
 <meta property="og:url" content="https://tocarougebarcelona.com/signup.html">
-<meta property="og:title" content="Tickets · Toca Rouge, Friday 2nd October">
-<meta property="og:description" content="Toca Rouge. Friday 2nd October, Sala Bikini. Tickets online now.">
+<meta property="og:title" content="Join the list · Toca Rouge">
+<meta property="og:description" content="Toca Rouge. House music, Barcelona. Be first to know about the next party.">
 <meta property="og:image" content="https://tocarougebarcelona.com/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -29,8 +29,8 @@
       <img class="brand-mini" src="/assets/logo/tocarouge-wordmark-red.svg"
            alt="Toca Rouge" width="388" height="56">
     </a>
-    <h1 id="signup-heading">Tickets for Friday</h1>
-    <p class="subhead" id="signup-subhead">Sala Bikini, Friday 2nd October. Doors open at midnight. Fill this in and we'll take you straight to your ticket.</p>
+    <h1 id="signup-heading">Don't miss the next party</h1>
+    <p class="subhead" id="signup-subhead">Join the list and be the first to know.</p>
     <form id="signup-form" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLSffd653yc66nX6rRnEkaeqDe-QRgiSkMtoO40ruGuvVFexy-A/formResponse">
       <div>
         <label for="first-name">First name</label>
@@ -92,7 +92,7 @@
       <p class="privacy-note">
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
-      <button type="submit" class="submit" id="submit-btn">Get a ticket</button>
+      <button type="submit" class="submit" id="submit-btn">Join the list</button>
       <p class="error" id="error-msg" role="alert">Your details are most likely saved. Please don't submit again, we'll be in touch before the next party.</p>
     </form>
     <p class="note">
@@ -108,26 +108,6 @@
           style="position:absolute;left:-9999px;width:0;height:0;border:0"></iframe>
   <script>
     (function () {
-      // Friday 2 October: where a confirmed signup goes next, per sender. The
-      // tickets sell on Sala Bikini's Xceed channel; each sender has a
-      // promoter link there, so fourvenues counts sales per sender while our
-      // sheet keeps the exact group from ?src=. An empty link falls back to
-      // 'default'; if that is empty too, the visitor stays on the on-page
-      // confirmation. Same redirect pattern the Boris funnel used before 4a30d0f.
-      var TICKET_LINKS = {
-        'default': 'https://xceed.me/es/barcelona/event/toca-rouge/246929/channel/bikini-barcelona',
-        'max': '',
-        'paul': '',
-        'hrtngs': ''
-      };
-      function ticketLinkFor(code) {
-        var key = 'default';
-        if (/^ev3_dj_hrtngs/.test(code)) key = 'hrtngs';
-        else if (/^ev3_(wa_esade_cohort|wa_barcelona_business|dm_max)/.test(code)) key = 'max';
-        else if (/^ev3_(wa_uic|dm_paul)/.test(code)) key = 'paul';
-        return TICKET_LINKS[key] || TICKET_LINKS['default'];
-      }
-
       // Populate the hidden attribution field from ?src=... in the URL.
       //
       // Trimmed and length-capped, and nothing else. Codes are matched EXACTLY
@@ -208,8 +188,6 @@
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
         clearTimeout(timer);
-        var next = ticketLinkFor(src);
-        if (next) { window.location.href = next; return; }
         // Not form.hidden: #signup-form { display: flex } in brand.css is an ID
         // rule and beats the [hidden] UA rule's attribute-selector specificity,
         // so setting the attribute alone left the form fully visible with the
@@ -219,8 +197,8 @@
         // Reuse the heading/subhead rather than a separate low-key <p> for
         // the confirmation — Paul wanted it to carry the same weight as the
         // pitch it replaces, not read as a footnote. 2026-09-23.
-        heading.textContent = "Thanks, you're signed up";
-        subhead.textContent = "Friday 2nd October, Sala Bikini. Doors open at midnight. Your ticket link follows by message.";
+        heading.textContent = "You're on the list";
+        subhead.textContent = "See you soon. We'll let you know as soon as the next one's on.";
       });
 
       // No preventDefault: the browser performs the POST itself. This handler
@@ -270,14 +248,8 @@
         // the POST outright, and the page cannot tell. It must also not ask
         // for a second submission, which is how one visitor becomes two rows.
         timer = setTimeout(function () {
-          // Tickets version: a browser that blocks the background send must
-          // still reach the tickets, or a lost signup becomes a lost sale too
-          // (Max's failed signup, 2026-09-30). The signup may be missing from
-          // the sheet; the purchase is not.
-          var next = ticketLinkFor(src);
-          if (next) { window.location.href = next; return; }
           btn.disabled = false;
-          btn.textContent = 'Get a ticket';
+          btn.textContent = 'Join the list';
           errorMsg.classList.add('show');
           submitted = false;
         }, 6000);
