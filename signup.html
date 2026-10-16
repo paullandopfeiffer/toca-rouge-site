@@ -21,6 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg">
 <link rel="stylesheet" href="/assets/brand.css">
+<script src="/assets/consent.js" defer></script>
 </head>
 <body class="page-signup">
   <main class="wrap">
@@ -101,7 +102,7 @@
     </p>
     <footer>
       <a href="/privacy.html">Privacy</a> ·
-      <a href="/impressum.html">Legal</a>
+      <a href="/impressum.html">Legal</a><span data-consent-open> &middot; <a href="#">Cookies</a></span>
     </footer>
   </main>
   <iframe name="gform-sink" id="gform-sink" title="" aria-hidden="true" tabindex="-1"
@@ -227,6 +228,13 @@
         // fail for a field carrying a legal permission — a lost signup is
         // recoverable, a person wrongly marked reachable is not.
         marketing.value = optout.checked ? '' : 'Yes, keep me posted';
+
+        // Meta's Lead event, for ads optimising on signups. Fired here, before
+        // the POST, because a page that redirects after signup would lose a
+        // later call. trTrack() (assets/consent.js) is a no-op unless the
+        // visitor accepted cookies, so nothing is sent to Meta otherwise. No
+        // form values are passed: Meta learns that a signup happened, not who.
+        if (window.trTrack) window.trTrack('Lead', { content_name: srcField.value || 'direct' });
 
         submitted = true;
         errorMsg.classList.remove('show');

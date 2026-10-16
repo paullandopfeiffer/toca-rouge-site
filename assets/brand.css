@@ -1134,3 +1134,44 @@ button.submit:disabled { opacity: 0.5; cursor: default; }
 .page-legal p { line-height: var(--tr-leading-body); }
 .page-privacy a,
 .page-legal a { color: var(--tr-red-text); }
+
+/* ---- Cookie banner (assets/consent.js) -----------------------------------
+   Reject and Accept share one style on purpose: in Spain refusing must be as
+   easy as accepting, so neither gets the brand-red fill. The border carries
+   --tr-border-strong (3.88:1) because it is the only thing marking each
+   control. Fixed to the bottom so it never covers the form's submit button
+   on a phone; max-width keeps it a strip on desktop. */
+.consent-banner {
+  position: fixed;
+  left: var(--tr-space-4);
+  right: var(--tr-space-4);
+  bottom: var(--tr-space-4);
+  z-index: 1000;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--tr-space-4);
+  background-color: var(--tr-panel);
+  border: 1px solid var(--tr-border-strong);
+  border-radius: var(--tr-radius-box);
+  color: var(--tr-fg);
+  text-align: left;
+}
+.consent-banner-text { margin: 0 0 var(--tr-space-3); font-size: var(--tr-text-sm); line-height: 1.5; }
+.consent-banner-text a { color: var(--tr-red-text); }
+.consent-banner-actions { display: flex; gap: var(--tr-space-3); }
+.consent-btn {
+  flex: 1;
+  min-height: 44px;
+  padding: var(--tr-space-2) var(--tr-space-4);
+  border: 1px solid var(--tr-border-strong);
+  border-radius: var(--tr-radius-pill);
+  background-color: transparent;
+  color: var(--tr-fg);
+  font-family: inherit;
+  font-size: var(--tr-text-base);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--tr-transition);
+}
+.consent-btn:hover { background-color: var(--tr-ink); }
+.consent-btn:focus-visible { outline: 2px solid var(--tr-focus); outline-offset: 2px; }
