@@ -119,6 +119,10 @@
       // which cannot be part of a legitimate code. The one exception is
       // escapeFormula() below, applied at submit time alongside the name and
       // phone fields — a security guard, not a rewrite of the code itself.
+      // Apps Script web app that submits to the Form and reports back (relay(),
+      // below). Empty means the native POST only, exactly as before.
+      var RELAY_URL = 'https://script.google.com/macros/s/AKfycbwvmTHxgWzZzdKbD-x9gwr1iWFOTN-nW_3BiZOLLT1OfuE6pnaj_w9CzPtdlCB-T96Z7g/exec';
+
       var params = new URLSearchParams(window.location.search);
       var src = (params.get('src') || '').trim().slice(0, 64);
       if (src) document.getElementById('src').value = src;
@@ -189,6 +193,10 @@
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
         clearTimeout(timer);
+        showConfirmation();
+      });
+
+      function showConfirmation() {
         // Not form.hidden: #signup-form { display: flex } in brand.css is an ID
         // rule and beats the [hidden] UA rule's attribute-selector specificity,
         // so setting the attribute alone left the form fully visible with the
@@ -200,7 +208,37 @@
         // pitch it replaces, not read as a footnote. 2026-09-23.
         heading.textContent = "You're on the list";
         subhead.textContent = "See you soon. We'll let you know as soon as the next one's on.";
-      });
+      }
+
+      // The native path: the browser POSTs into the hidden iframe and the page
+      // waits for its load event (above), with the 6s fallback below.
+      function waitForSink() {
+        submitted = true;
+        errorMsg.classList.remove('show');
+        btn.disabled = true;
+        btn.textContent = 'Submitting…';
+
+        // If Google has not answered in 6s, give the visitor something to do
+        // rather than a dead button.
+        //
+        // Shortened from 12s and the copy softened on 2026-09-16. The form
+        // moved to the admin@ copy that day; submissions kept reaching the
+        // sheet, but Paul's browser never showed the confirmation, because
+        // the iframe's load event never fired there. It fired normally in a
+        // clean browser on the same page, so the cause was never identified —
+        // this fallback is simply the path a blocking browser actually takes,
+        // and 12s of dead button is too long to sit on it.
+        //
+        // The copy still must not claim success: a content blocker can kill
+        // the POST outright, and the page cannot tell. It must also not ask
+        // for a second submission, which is how one visitor becomes two rows.
+        timer = setTimeout(function () {
+          btn.disabled = false;
+          btn.textContent = 'Join the list';
+          errorMsg.classList.add('show');
+          submitted = false;
+        }, 6000);
+      }
 
       // No preventDefault: the browser performs the POST itself. This handler
       // only runs once the browser's own required-field validation passes.
@@ -228,6 +266,11 @@
         // fail for a field carrying a legal permission — a lost signup is
         // recoverable, a person wrongly marked reachable is not.
         marketing.value = optout.checked ? '' : 'Yes, keep me posted';
+        // An empty value is not one of the question's options, and Google
+        // rejects the whole response for it (the relay got a 400 for exactly
+        // this, 2026-10-19). A disabled field is not sent at all, which is what
+        // Google's own form does with an unticked box.
+        marketing.disabled = optout.checked;
 
         // Meta's Lead event, for ads optimising on signups. Fired here, before
         // the POST, because a page that redirects after signup would lose a
@@ -236,32 +279,48 @@
         // form values are passed: Meta learns that a signup happened, not who.
         if (window.trTrack) window.trTrack('Lead', { content_name: srcField.value || 'direct' });
 
+        // With the relay set, the page waits for a real "saved" before it says so,
+        // and falls back to the native POST below if the relay fails or is slow.
+        if (RELAY_URL) { e.preventDefault(); relay(); return; }
+        waitForSink();
+      });
+
+      // Relay, added 2026-10-19. The iframe's load event fires on any answer
+      // from Google, an error page included, so the page cannot tell a saved
+      // signup from a lost one. Max's 2 October signup never reached the
+      // sheet, cause unknown.
+      // An Apps Script web app on admin@ submits the same five fields to the
+      // same Form server-side and answers {ok:true} only on a 200, so success
+      // is now confirmed. If it errors or takes over 8s, the native POST runs
+      // instead, so a broken relay costs nothing compared with before. The
+      // one cost: a relay that saved but answered late becomes two rows.
+      function relay() {
         submitted = true;
         errorMsg.classList.remove('show');
         btn.disabled = true;
         btn.textContent = 'Submitting…';
-
-        // If Google has not answered in 6s, give the visitor something to do
-        // rather than a dead button.
-        //
-        // Shortened from 12s and the copy softened on 2026-09-16. The form
-        // moved to the admin@ copy that day; submissions kept reaching the
-        // sheet, but Paul's browser never showed the confirmation, because
-        // the iframe's load event never fired there. It fired normally in a
-        // clean browser on the same page, so the cause was never identified —
-        // this fallback is simply the path a blocking browser actually takes,
-        // and 12s of dead button is too long to sit on it.
-        //
-        // The copy still must not claim success: a content blocker can kill
-        // the POST outright, and the page cannot tell. It must also not ask
-        // for a second submission, which is how one visitor becomes two rows.
-        timer = setTimeout(function () {
-          btn.disabled = false;
-          btn.textContent = 'Join the list';
-          errorMsg.classList.add('show');
+        var data = {};
+        Array.prototype.forEach.call(form.elements, function (el) {
+          // Empty fields are left out: sent empty, Google answers the relay 400.
+          if (el.name && el.name.indexOf('entry.') === 0 && el.value !== '' && !el.disabled) data[el.name] = el.value;
+        });
+        var settled = false;
+        function settle(ok) {
+          if (settled) return;
+          settled = true;
+          clearTimeout(guard);
+          if (ok) { showConfirmation(); return; }
           submitted = false;
-        }, 6000);
-      });
+          waitForSink();
+          form.submit();               // fires no submit event, so no loop
+        }
+        var guard = setTimeout(function () { settle(false); }, 8000);
+        // A string body goes as text/plain: a simple request, no CORS preflight.
+        fetch(RELAY_URL, { method: 'POST', body: JSON.stringify(data) })
+          .then(function (r) { return r.json(); })
+          .then(function (res) { settle(!!(res && res.ok)); })
+          .catch(function () { settle(false); });
+      }
     })();
   </script>
 </body>
