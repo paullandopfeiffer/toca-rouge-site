@@ -296,7 +296,8 @@
         btn.textContent = 'Submitting…';
         var data = {};
         Array.prototype.forEach.call(form.elements, function (el) {
-          if (el.name && el.name.indexOf('entry.') === 0) data[el.name] = el.value;
+          // Empty fields are left out: sent empty, Google answers the relay 400.
+          if (el.name && el.name.indexOf('entry.') === 0 && el.value !== '') data[el.name] = el.value;
         });
         var settled = false;
         function settle(ok) {
