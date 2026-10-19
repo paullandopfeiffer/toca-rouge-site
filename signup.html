@@ -121,7 +121,7 @@
       // phone fields — a security guard, not a rewrite of the code itself.
       // Apps Script web app that submits to the Form and reports back (relay(),
       // below). Empty means the native POST only, exactly as before.
-      var RELAY_URL = '';
+      var RELAY_URL = 'https://script.google.com/macros/s/AKfycbwvmTHxgWzZzdKbD-x9gwr1iWFOTN-nW_3BiZOLLT1OfuE6pnaj_w9CzPtdlCB-T96Z7g/exec';
 
       var params = new URLSearchParams(window.location.search);
       var src = (params.get('src') || '').trim().slice(0, 64);
