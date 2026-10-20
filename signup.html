@@ -100,11 +100,8 @@
          only here, after signing up, as on 2 October (Paul, 2026-10-20). Toggled
          with inline style, not [hidden]: .cta sets display and would beat the UA rule. -->
     <div class="code-box" id="code-box" style="display:none">
-      <p class="eyebrow">Your guestlist code</p>
-      <p class="code-value" id="code-value">tocarougehalloween</p>
-      <button type="button" class="cta secondary" id="copy-code">Copy code</button>
-      <p class="code-help">On the next page, tap "Got a code?" and enter it to get your guestlist ticket.</p>
-      <a class="cta" id="claim-link" href="https://xceed.me/en/barcelona/event/toca-rouge-1/249260/channel/bikini-barcelona" target="_blank" rel="noopener noreferrer">Get your guestlist ticket</a>
+      <a class="cta" id="claim-link" href="https://xceed.me/en/barcelona/checkout/promocode/toca-rouge-1/868ad1f4-cc63-11f1-adb1-0242ac110007/promocode/tocarougehalloween?channel=bikini-barcelona" target="_blank" rel="noopener noreferrer">Get my free guestlist ticket</a>
+      <p class="code-help">Your code <span id="code-value">tocarougehalloween</span> is already applied.</p>
     </div>
     <p class="note">
       Want more than an email? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
@@ -201,14 +198,7 @@
       var timer = null;
 
       var codeBox = document.getElementById('code-box');
-      var copyBtn = document.getElementById('copy-code');
       function revealCode() { codeBox.style.display = 'block'; }
-      copyBtn.addEventListener('click', function () {
-        var text = document.getElementById('code-value').textContent;
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function () { copyBtn.textContent = 'Copied'; }, function () {});
-        }
-      });
 
       sink.addEventListener('load', function () {
         if (!submitted) return;      // ignore the iframe's initial about:blank
@@ -226,8 +216,10 @@
         // Reuse the heading/subhead rather than a separate low-key <p> for
         // the confirmation — Paul wanted it to carry the same weight as the
         // pitch it replaces, not read as a footnote. 2026-09-23.
-        heading.textContent = "You're on the list";
-        subhead.textContent = "Friday 30 October, Sala Bikini. Doors open at midnight. Come in costume.";
+        // Not "You're on the list": the signup only collects data, and the
+        // guestlist place is the free Xceed ticket (Paul, 2026-10-20).
+        heading.textContent = "One more step";
+        subhead.textContent = "Get your free guestlist ticket on Xceed to be on the list. Friday 30 October, Sala Bikini. Doors open at midnight.";
         revealCode();
       }
 
