@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guestlist · Toca Rouge Halloween, Friday 30 October</title>
-<meta name="description" content="Toca Rouge Halloween. Friday 30 October, Sala Bikini. Guestlist open now.">
+<title>Tickets · Toca Rouge Halloween, Friday 30 October</title>
+<meta name="description" content="Toca Rouge Halloween. Friday 30 October, Sala Bikini. Tickets online now.">
 <link rel="canonical" href="https://tocarougebarcelona.com/signup.html">
 <meta name="theme-color" content="#0b0b0c">
 <!-- Ambassador links point straight at this page (tocarougebarcelona.com/signup.html?src=…),
@@ -12,8 +12,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Toca Rouge">
 <meta property="og:url" content="https://tocarougebarcelona.com/signup.html">
-<meta property="og:title" content="Guestlist · Toca Rouge Halloween, Friday 30 October">
-<meta property="og:description" content="Toca Rouge Halloween. Friday 30 October, Sala Bikini. Guestlist open now.">
+<meta property="og:title" content="Tickets · Toca Rouge Halloween, Friday 30 October">
+<meta property="og:description" content="Toca Rouge Halloween. Friday 30 October, Sala Bikini. Tickets online now.">
 <meta property="og:image" content="https://tocarougebarcelona.com/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -30,8 +30,8 @@
       <img class="brand-mini" src="/assets/logo/tocarouge-wordmark-red.svg"
            alt="Toca Rouge" width="388" height="56">
     </a>
-    <h1 id="signup-heading">Halloween guestlist</h1>
-    <p class="subhead" id="signup-subhead">Sala Bikini, Friday 30 October. Two floors, come in costume. Doors open at midnight. Sign up before the night.</p>
+    <h1 id="signup-heading">Tickets for Halloween</h1>
+    <p class="subhead" id="signup-subhead">Sala Bikini, Friday 30 October. Two floors, come in costume. Doors open at midnight. The guestlist is full, fill this in and get your ticket on the next page.</p>
     <form id="signup-form" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLSffd653yc66nX6rRnEkaeqDe-QRgiSkMtoO40ruGuvVFexy-A/formResponse">
       <div>
         <label for="first-name">First name</label>
@@ -93,15 +93,14 @@
       <p class="privacy-note">
         By submitting, you agree to our <a href="/privacy.html">privacy notice</a>.
       </p>
-      <button type="submit" class="submit" id="submit-btn">Get on the list</button>
+      <button type="submit" class="submit" id="submit-btn">Get a ticket</button>
       <p class="error" id="error-msg" role="alert">Your details are most likely saved. Please don't submit again, we'll be in touch before the next party.</p>
     </form>
     <!-- Halloween: the guestlist is claimed on our Xceed event with a code, shown
          only here, after signing up, as on 2 October (Paul, 2026-10-20). Toggled
          with inline style, not [hidden]: .cta sets display and would beat the UA rule. -->
     <div class="code-box" id="code-box" style="display:none">
-      <a class="cta" id="claim-link" href="https://xceed.me/en/barcelona/checkout/promocode/toca-rouge-1/868ad1f4-cc63-11f1-adb1-0242ac110007/promocode/tocarougehalloween?channel=bikini-barcelona" target="_blank" rel="noopener noreferrer">Claim your free spot</a>
-      <p class="code-help">Your code <em id="code-value">tocarougehalloween</em> is already applied.</p>
+      <a class="cta" id="claim-link" href="https://xceed.me/en/barcelona/event/toca-rouge-1/249260/channel/bikini-barcelona" target="_blank" rel="noopener noreferrer">Get a ticket</a>
     </div>
     <p class="note">
       Want more than an email? <a href="https://chat.whatsapp.com/FWIymebAuYi0KIpYEI03Yk"
@@ -219,7 +218,7 @@
         // Not "You're on the list": the signup only collects data, and the
         // guestlist place is the free Xceed ticket (Paul, 2026-10-20).
         heading.textContent = "One more step";
-        subhead.textContent = "Claim your free spot on Xceed to get on the guestlist.";
+        subhead.textContent = "Get your ticket on Xceed.";
         revealCode();
       }
 
@@ -247,7 +246,7 @@
         // for a second submission, which is how one visitor becomes two rows.
         timer = setTimeout(function () {
           btn.disabled = false;
-          btn.textContent = 'Get on the list';
+          btn.textContent = 'Get a ticket';
           errorMsg.classList.add('show');
           submitted = false;
           // The signup has most likely landed, and some browsers never fire
