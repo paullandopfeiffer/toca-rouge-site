@@ -15,7 +15,7 @@
  * before the pixel exists.
  */
 (function () {
-  var PIXEL_ID = '';            // Events Manager → Data sources → the pixel's ID
+  var PIXEL_ID = '28587247294300236';            // Events Manager → Data sources → the pixel's ID
   var KEY = 'tr_consent_v1';    // bump the suffix if the banner's purpose changes
   var loaded = false;
 
