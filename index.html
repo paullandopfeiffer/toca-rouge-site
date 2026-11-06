@@ -38,23 +38,11 @@
     </h1>
     <p class="details">NOV 20TH 2026<br>TILL 6 AM<br>SALA BIKINI</p>
     <p class="venue">The White Affair with Zaylune. Tickets online now. Two floors, dress code all white. Doors open at midnight.</p>
-    <a class="cta" href="/signup.html" id="signup-link">Get a ticket</a>
+    <a class="cta" href="https://www.fourvenues.com/paul-pfeiffer/events/the-white-affair-by-zaylune-x-toca-rouge-20-11-2026-FCZY" id="signup-link">Get a ticket</a>
     <footer>
       <a href="/privacy.html" id="privacy-link">Privacy</a> ·
       <a href="/impressum.html">Legal</a><span data-consent-open> &middot; <a href="#">Cookies</a></span>
     </footer>
   </main>
-  <script>
-    (function () {
-      // Carry ?src= through to the signup page. Without this, a campaign link
-      // that lands here loses its attribution the moment someone clicks the
-      // CTA — the form would record a blank ref and the code would be lost.
-      var src = (new URLSearchParams(window.location.search).get('src') || '').trim().slice(0, 64);
-      if (src) {
-        document.getElementById('signup-link').href =
-          '/signup.html?src=' + encodeURIComponent(src);
-      }
-    })();
-  </script>
 </body>
 </html>
